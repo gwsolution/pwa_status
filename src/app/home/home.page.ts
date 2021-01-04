@@ -7,19 +7,14 @@ import { serverClient } from 'src/providers/server-util/serverClient';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-
+  private data: any = {};
   constructor(server:serverClient) {
-    server.getAllUsers().then(data => {
-      console.log(data.status);
-      console.log(data.data); // data received by server
-      console.log(data.headers);
-  
-    })
-    .catch(error => {
-      console.log(error);
-      console.log(error.status);
-      console.log(error.error); // error message as string
-      console.log(error.headers);
+    server.getAllUsers().subscribe(d => {
+      this.data.response = d["_body"];
+      let data_array = JSON.stringify(d, null, "\t");
+      let data_parsed = JSON.parse(data_array);
+      let data_ = data_parsed.data;
+     console.log(data_[0])
   
     });
   }

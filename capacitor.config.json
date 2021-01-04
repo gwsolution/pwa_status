@@ -1,7 +1,7 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "com.gws.pwa",
   "appName": "gws",
-  "bundledWebRuntime": false,
+  "bundledWebRuntime": true,
   "npmClient": "npm",
   "webDir": "www",
   "plugins": {
@@ -9,5 +9,6 @@
       "launchShowDuration": 0
     }
   },
-  "cordova": {}
+  "cordova": {
+  }
 }
