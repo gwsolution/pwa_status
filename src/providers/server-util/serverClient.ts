@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import {HttpClient, HttpHeaders} from '@angular/common/http'
+import {HttpClient} from '@angular/common/http'
 
 import { environment } from 'src/environments/environment';
-
-
 
 @Injectable()
 export class serverClient{
