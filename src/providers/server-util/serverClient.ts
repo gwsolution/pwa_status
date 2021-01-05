@@ -18,4 +18,8 @@ export class serverClient{
         return this.http.get(environment.BASE_URL + environment.USER_API + environment.ALL_USER_API,{headers:this.getRequestOptions()});
     }
 
+    public getUserById(id): Observable<Object> {
+        return this.http.get(environment.BASE_URL + environment.USER_API + id,{headers:this.getRequestOptions()});
+    }
+
 }

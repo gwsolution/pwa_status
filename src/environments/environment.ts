@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: true,
+  production: false,
   BASE_URL:"https://api.planbell.com:8443/",
   USER_API:"user/",
   ALL_USER_API:"all",
