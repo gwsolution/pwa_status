@@ -8,25 +8,39 @@
 </ion-header>
 
 <ion-content>
-  <ion-searchbar animated></ion-searchbar>
+  <ion-row class="ion-justify-content-center"><ion-col size-md="6">
+    <ion-searchbar animated debounce="500" (ionChange)="getItems($event)" ></ion-searchbar>
+    </ion-col></ion-row>
 
-  <ion-row class="ion-justify-content-center" *ngFor="let user of users">
-    <ion-col size-md="6">
-      <ion-card>
-        <ion-card-content>
-          <ion-row  >
-            <ion-col size-md="2">
-              <ion-thumbnail>
-                <img src="{{user.photoUrl}}">
-              </ion-thumbnail>
-            </ion-col>
-            <ion-col size-md="4" class="ion-align-self-center">{{user.uuid}}</ion-col>
-            <ion-col size-md="2" class="ion-align-self-center">{{user.name}}</ion-col>
-            <ion-col size-md="2" class="ion-align-self-center">{{user.email}}</ion-col>
-            <ion-col size-md="2" class="ion-align-self-center">{{user.phone}}</ion-col>
-          </ion-row>
-        </ion-card-content>
-      </ion-card>
-    </ion-col>
-  </ion-row>
+  <ion-list>
+    <ion-item class="center" *ngFor="let user of users">
+      <ion-col size="12">
+        <ion-card>
+          <ion-card-content>
+            <ion-row>
+              <ion-col size-md="1">
+                <ion-thumbnail>
+                  <img src="{{user.photoUrl}}">
+                </ion-thumbnail>
+              </ion-col>
+              <ion-col size-md="4" class="ion-align-self-center">{{user.uuid}}</ion-col>
+              <ion-col size-md="2" class="ion-align-self-center">{{user.name}}</ion-col>
+              <ion-col size-md="3" class="ion-align-self-center">{{user.email}}</ion-col>
+              <ion-col size-md="2" class="ion-align-self-center">{{user.phone}}</ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+  </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  
+
+  <!--  -->
 </ion-content>
