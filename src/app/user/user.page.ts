@@ -73,14 +73,13 @@ export class UserPage implements OnInit {
     }
   }
 
-
   updateStatus(ev, user) {
    var event_val = ev.target.checked;
    console.log(event_val)
     if (event_val) {
-      user.status = 2
-    } else
       user.status = 1
+    } else
+      user.status = 0
          console.log(user)
       this.serverClient.createToken(user.uuid).subscribe(d => {
         var token = this.util.getDataFromResponse(d);

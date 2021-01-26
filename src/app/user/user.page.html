@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-row class="ion-justify-content-center"><ion-col size-md="6">
-    <ion-searchbar animated debounce="250" (ionChange)="getItems($event)" ></ion-searchbar>
+    <ion-searchbar animated debounce="500" (ionChange)="getItems($event)" ></ion-searchbar>
     </ion-col></ion-row>
 
   <ion-list>
@@ -26,19 +26,14 @@
               <ion-col size-md="1" class="ion-align-self-center">{{user.id}}</ion-col>
               <ion-col size-md="2" class="ion-align-self-center">{{user.name}}</ion-col>
               <ion-col size-md="3" class="ion-align-self-center">{{user.email}}</ion-col>
-              <ion-col size-md="2" class="ion-align-self-center">{{user.phone}}</ion-col>
+              <ion-col size-md="3" class="ion-align-self-center">{{user.phone}}</ion-col>
               <ion-col size-md="1" class="ion-align-self-center">
                 <ion-button>
                   <ion-icon slot="icon-only" name="create-outline"></ion-icon>
                 </ion-button>
               </ion-col>
               <ion-col size-md="1" class="ion-align-self-center">
-                <ion-button>
-                  <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-                </ion-button>
-              </ion-col>
-              <ion-col size-md="1" class="ion-align-self-center">
-                <ion-toggle  (ionChange)="updateStatus($event,user)" color="dark"></ion-toggle>
+                <ion-toggle (ionChange)="updateStatus($event,user)" color="dark" [disabled]='false' [(ngModel)]="user.status"></ion-toggle>
               </ion-col>
             </ion-row>
           </ion-card-content>
