@@ -5,10 +5,13 @@
 export const environment = {
   production: false,
   BASE_URL:"https://api.planbell.com:8443/",
-  USER_API:"user/",
-  ALL_USER_API:"all",
-  SEARCH_USER_API:"search",
-  AUTHORIZATION:'Basic dXNlcjpnd3MxMjM0NQ=='
+  // BASE_URL:"https://localhost:8443/",
+  USER_API:"user",
+  REFRESH_TOKEN_API:"token/",
+  ALL_USER_API:"/all",
+  SEARCH_USER_API:"/search",
+  AUTHORIZATION:'Basic dXNlcjpnd3MxMjM0NQ==',
+  ADMIN_AUTHORIZATION:'Basic YWRtaW46YWRtaW4xMjM0NQ=='
 }; 
 
 /*

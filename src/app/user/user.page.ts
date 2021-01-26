@@ -14,8 +14,8 @@ export class UserPage implements OnInit {
 
   users: Object[] = [];
   temp: Object[] = [];
-  page_count:number =0;
-  constructor(private serverClient:serverClient, private util: commonUtil) { }
+  page_count: number = 0;
+  constructor(private serverClient: serverClient, private util: commonUtil) { }
 
   ngOnInit() {
     this.getAllUsers(false, "");
@@ -25,50 +25,76 @@ export class UserPage implements OnInit {
     this.getAllUsers(true, event);
   }
 
-  getAllUsers(isFirstLoad, event){
-    this.serverClient.getUsersListing(15,this.page_count).subscribe(d => {
-      
+  getAllUsers(isFirstLoad, event) {
+    this.serverClient.getUsersListing(15, this.page_count).subscribe(d => {
+
       for (let i = 0; i < this.util.getDataFromResponse(d).user.length; i++) {
         this.users.push(this.util.getDataFromResponse(d).user[i]);
       }
 
       console.log(this.users)
       if (isFirstLoad)
-          event.target.complete();
-      if(this.util.getDataFromResponse(d).user.length>0)
-      this.page_count = this.page_count +1;
+        event.target.complete();
+      if (this.util.getDataFromResponse(d).user.length > 0)
+        this.page_count = this.page_count + 1;
     }, error => {
       console.log(error);
     });
   }
 
-  searchUsers(isFirstLoad, event, key){
-    this.serverClient.searchUsers(15,this.page_count,key).subscribe(d => {
-      
+  searchUsers(isFirstLoad, event, key) {
+    this.serverClient.searchUsers(15, this.page_count, key).subscribe(d => {
+
       for (let i = 0; i < this.util.getDataFromResponse(d).user.length; i++) {
         this.users.push(this.util.getDataFromResponse(d).user[i]);
       }
 
       console.log(this.users)
       if (isFirstLoad)
-          event.target.complete();
-      if(this.util.getDataFromResponse(d).user.length>0)
-      this.page_count = this.page_count +1;
+        event.target.complete();
+      if (this.util.getDataFromResponse(d).user.length > 0)
+        this.page_count = this.page_count + 1;
     }, error => {
       console.log(error);
     });
   }
 
   getItems(ev) {
-    var val = ev.target.value;
-    this.page_count =0;
-    this.users =[]
-   
+    var val: string = ev.target.value;
+    this.page_count = 0;
+    this.users = []
+
     if (val && val.trim() != '') {
-      this.searchUsers(false,"",val);
-    }else{
+      var split: string[] = val.split(" ");
+      val = split.join(",")
+      this.searchUsers(false, "", val);
+    } else {
       this.getAllUsers(false, "");
     }
-    }
+  }
+
+
+  updateStatus(ev, user) {
+   var event_val = ev.target.checked;
+   console.log(event_val)
+    if (event_val) {
+      user.status = 2
+    } else
+      user.status = 1
+         console.log(user)
+      this.serverClient.createToken(user.uuid).subscribe(d => {
+        var token = this.util.getDataFromResponse(d);
+        this.serverClient.updateUser(user, token).subscribe(d => {
+          console.log(d)
+        }, error => {
+          console.log(error);
+        });
+      }, error => {
+        console.log(error);
+      });
+    
+
+ 
+  }
 
 }

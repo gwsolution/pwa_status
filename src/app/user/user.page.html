@@ -9,28 +9,41 @@
 
 <ion-content>
   <ion-row class="ion-justify-content-center"><ion-col size-md="6">
-    <ion-searchbar animated debounce="500" (ionChange)="getItems($event)" ></ion-searchbar>
+    <ion-searchbar animated debounce="250" (ionChange)="getItems($event)" ></ion-searchbar>
     </ion-col></ion-row>
 
   <ion-list>
     <ion-item class="center" *ngFor="let user of users">
-      <ion-col size="12">
+      <ion-col size="12">   
         <ion-card>
-          <ion-card-content>
+          <ion-card-content>                 
             <ion-row>
               <ion-col size-md="1">
                 <ion-thumbnail>
                   <img src="{{user.photoUrl}}">
                 </ion-thumbnail>
               </ion-col>
-              <ion-col size-md="4" class="ion-align-self-center">{{user.uuid}}</ion-col>
+              <ion-col size-md="1" class="ion-align-self-center">{{user.id}}</ion-col>
               <ion-col size-md="2" class="ion-align-self-center">{{user.name}}</ion-col>
               <ion-col size-md="3" class="ion-align-self-center">{{user.email}}</ion-col>
               <ion-col size-md="2" class="ion-align-self-center">{{user.phone}}</ion-col>
+              <ion-col size-md="1" class="ion-align-self-center">
+                <ion-button>
+                  <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                </ion-button>
+              </ion-col>
+              <ion-col size-md="1" class="ion-align-self-center">
+                <ion-button>
+                  <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                </ion-button>
+              </ion-col>
+              <ion-col size-md="1" class="ion-align-self-center">
+                <ion-toggle  (ionChange)="updateStatus($event,user)" color="dark"></ion-toggle>
+              </ion-col>
             </ion-row>
           </ion-card-content>
         </ion-card>
-      </ion-col>
+</ion-col>
   </ion-item>
   </ion-list>
 
