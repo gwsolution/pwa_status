@@ -1,4 +1,12 @@
 .center {
-    margin: 0 100 0 100;
+    margin: auto;
 
+    width: 70%;
+  }
+
+  * {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
