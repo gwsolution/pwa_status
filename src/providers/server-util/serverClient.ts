@@ -36,7 +36,7 @@ export class serverClient {
     }
 
     public getUserById(id): Observable<Object> {
-        return this.http.get(environment.BASE_URL + environment.USER_API + id, { headers: this.getRequestOptions() });
+        return this.http.get(environment.BASE_URL + environment.USER_API +"/"+ id, { headers: this.getRequestOptions() });
     }
 
     public updateUser(user, token): Observable<Object> {

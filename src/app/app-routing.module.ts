@@ -11,6 +11,7 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  { path: 'user/:id', loadChildren: () => import('./user-detail/user-detail.module').then(m => m.UserDetailPageModule) },
   {
     path: 'user',
     loadChildren: () => import('./user/user.module').then( m => m.UserPageModule)

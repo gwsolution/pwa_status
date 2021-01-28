@@ -13,7 +13,7 @@
     </ion-col></ion-row>
 
   <ion-list>
-    <ion-item class="center" *ngFor="let user of users">
+    <ion-item routerLink="/user/{{user.id}}" routerDirection="forward" class="center" *ngFor="let user of users">
       <ion-col size="12">   
         <ion-card>
                      
