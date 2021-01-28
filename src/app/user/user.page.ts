@@ -95,13 +95,13 @@ export class UserPage implements OnInit {
  
   }
   async presentAlertConfirm(ev,user) {
-    this.isAlertDisabled = false;
-    var status = user.status;
     var header=""
-    if (status==1)
+
+    if (!user.status)
     header = "Activate user?"
     else 
     header = "Deactivate user?"
+
     const alert = await this.alertController.create({
       header:header,
       
@@ -111,16 +111,14 @@ export class UserPage implements OnInit {
           role: 'cancel',
           cssClass: 'secondary',
           handler: (blah) => {
-            //this.isAlertDisabled = true;
-            setTimeout(() => { user.status = !ev; });
-            
-            console.log('Confirm Cancel: blah');
+            user.status = !user.status;
+
           }
         }, {
           text: 'OK',
           handler: () => {
             this.updateStatus(ev,user);
-            console.log('Confirm Okay');
+
           }
         }
       ]
