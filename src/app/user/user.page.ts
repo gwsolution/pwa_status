@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonInfiniteScroll } from '@ionic/angular';
 import { serverClient } from 'src/providers/server-util/serverClient';
 import { commonUtil } from 'src/providers/util/commonUtil';
-
+import { AlertController } from '@ionic/angular';
 @Component({
   selector: 'app-user',
   templateUrl: './user.page.html',
@@ -11,11 +11,11 @@ import { commonUtil } from 'src/providers/util/commonUtil';
 export class UserPage implements OnInit {
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
-
+  isAlertDisabled: Boolean = false
   users: Object[] = [];
   temp: Object[] = [];
   page_count: number = 0;
-  constructor(private serverClient: serverClient, private util: commonUtil) { }
+  constructor(private serverClient: serverClient, private util: commonUtil, private alertController: AlertController) { }
 
   ngOnInit() {
     this.getAllUsers(false, "");
@@ -92,8 +92,40 @@ export class UserPage implements OnInit {
         console.log(error);
       });
     
-
  
   }
+  async presentAlertConfirm(ev,user) {
+    this.isAlertDisabled = false;
+    var status = user.status;
+    var header=""
+    if (status==1)
+    header = "Activate user?"
+    else 
+    header = "Deactivate user?"
+    const alert = await this.alertController.create({
+      header:header,
+      
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            //this.isAlertDisabled = true;
+            setTimeout(() => { user.status = !ev; });
+            
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'OK',
+          handler: () => {
+            this.updateStatus(ev,user);
+            console.log('Confirm Okay');
+          }
+        }
+      ]
+    });
 
+    await alert.present();
+  }
 }

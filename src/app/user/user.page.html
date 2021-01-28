@@ -33,7 +33,7 @@
                 </ion-button>
               </ion-col>
               <ion-col size-md="1" class="ion-align-self-center">
-                <ion-toggle (ionChange)="updateStatus($event,user)" color="dark" [disabled]='false' [(ngModel)]="user.status"></ion-toggle>
+                <ion-toggle (ionChange)="presentAlertConfirm($event,user)" color="dark" [disabled]='false' [(ngModel)]="user.status"></ion-toggle>
               </ion-col>
             </ion-row>
 
