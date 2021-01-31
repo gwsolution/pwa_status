@@ -112,7 +112,6 @@ export class UserPage implements OnInit {
           cssClass: 'secondary',
           handler: (blah) => {
             user.status = !user.status;
-
           }
         }, {
           text: 'OK',

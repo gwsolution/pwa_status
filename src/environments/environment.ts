@@ -11,7 +11,16 @@ export const environment = {
   ALL_USER_API:"/all",
   SEARCH_USER_API:"/search",
   AUTHORIZATION:'Basic dXNlcjpnd3MxMjM0NQ==',
-  ADMIN_AUTHORIZATION:'Basic YWRtaW46YWRtaW4xMjM0NQ=='
+  ADMIN_AUTHORIZATION:'Basic YWRtaW46YWRtaW4xMjM0NQ==',
+  firebaseConfig : {
+    apiKey: "AIzaSyD2MtKGQnTM-Ph49D78YlSKHVMqDBRUzUc",
+    authDomain: "gwsmodules-2020.firebaseapp.com",
+    projectId: "gwsmodules-2020",
+    storageBucket: "gwsmodules-2020.appspot.com",
+    messagingSenderId: "536715246574",
+    appId: "1:536715246574:web:f818e43bd9513419bf6cff",
+    measurementId: "G-080P2J8LHW"
+  }
 }; 
 
 /*

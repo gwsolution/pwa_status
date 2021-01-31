@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Appliance Management</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <ion-card class="ion-text-center" *ngIf="!isUploading && !isUploaded">
+      <ion-card-header>
+        <ion-card-title>Add Appliance</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Appliance name</ion-label>
+          <ion-input clearInput placeholder="please enter name here"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Appliance description</ion-label>
+          <ion-input clearInput placeholder="please enter description here"></ion-input>
+        </ion-item>
+        <ion-row class="ion-padding ion-align-items-center">
+          <ion-col size="12">Choose Appliance Images to Upload</ion-col>
+          <ion-col size="12">
+            <ion-button color="primary">
+              <input style="display: none;" id="myFile" type="file" (change)="uploadImage($event.target.files)" >
+              <button class="browse" style="background-color: transparent;
+              color: white; padding: 10px; border-radius: 10px;" type="button" onclick="document.getElementById('myFile').click();">Browse</button>
+            </ion-button>
+          </ion-col>
+          <ion-col size="12">
+            <div *ngIf="percentageVal | async as percentage">
+              Progress: {{ percentage | number }}%
+              <ion-progress-bar value="{{ percentage / 100 }}"></ion-progress-bar>
+            </div>
+          </ion-col>
+          <ion-col size="12">
+            <div *ngIf="trackSnapshot | async as snap">
+              File size: {{ snap.totalBytes | formatFileSize }}
+              <span *ngIf="snap.bytesTransferred">
+                Data transfered: {{ snap.bytesTransferred | formatFileSize }}
+              </span>
+            </div>
+          </ion-col>
+
+        </ion-row>
+
+
+        <ion-row class="ion-align-items-center">
+          <ion-col>
+            <ion-button color="primary" shape="round" size="medium">
+              Save Appliance
+            </ion-button>
+          </ion-col>
+          <ion-col size="12" >
+            <div>
+              
+            </div>
+          </ion-col>
+        </ion-row>
+
+
+
+
+
+
+
+
+      </ion-card-content>
+    </ion-card>
+
+
+  </div>
+</ion-content>

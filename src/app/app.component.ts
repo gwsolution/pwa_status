@@ -41,9 +41,9 @@ export class AppComponent {
         icon  : "person-circle-outline"
       },
       {
-        title : "Ashish",
-        url   : "/ashish",
-        icon  : "airplane-outline"
+        title : "Appiance Management",
+        url   : "/appliance",
+        icon  : "rocket-outline"
       },
     ]
   }

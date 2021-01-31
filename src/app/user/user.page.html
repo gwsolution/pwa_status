@@ -8,9 +8,11 @@
 </ion-header>
 
 <ion-content overflow-scroll="true">
-  <ion-row class="ion-justify-content-center"><ion-col size-md="6">
+  <ion-row class="ion-justify-content-center">
+    <ion-col size-md="6">
     <ion-searchbar animated debounce="500" (ionChange)="getItems($event)" ></ion-searchbar>
-    </ion-col></ion-row>
+    </ion-col>
+  </ion-row>
 
   <ion-list>
     <ion-item routerLink="/user/{{user.id}}" routerDirection="forward" class="center" *ngFor="let user of users">
