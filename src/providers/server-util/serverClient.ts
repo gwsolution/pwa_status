@@ -11,9 +11,8 @@ export class serverClient {
     }
 
     private getRequestOptions() {
-        return { 'Accept': 'application/json', 'content-type': 'application/json', 'Authorization': environment.AUTHORIZATION }
-    }
-
+        return { 'Accept': 'application/json', 'content-type': 'application/json', 'Authorization': environment.AUTHORIZATION,'Access-Control-Allow-Origin': '*','allow-running-insecure-content':'true' }
+      }
 
     private getUserRequestOptions(uuid, token) {
         return { 'Accept': 'application/json', 'content-type': 'application/json', 'Authorization': environment.AUTHORIZATION, 'uuid': uuid, 'token': token }

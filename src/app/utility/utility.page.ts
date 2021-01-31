@@ -6,7 +6,6 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { ApplianceClientService } from 'src/providers/server-util/appliance-client.service';
 import { Appliance } from 'src/providers/pojo/appliance';
-import { commonUtil } from 'src/providers/util/commonUtil';
 
 export interface imgFile {
   name: string;
@@ -15,12 +14,11 @@ export interface imgFile {
 }
 
 @Component({
-  selector: 'app-appliance',
-  templateUrl: './appliance.page.html',
-  styleUrls: ['./appliance.page.scss'],
+  selector: 'app-utility',
+  templateUrl: './utility.page.html',
+  styleUrls: ['./utility.page.scss'],
 })
-export class AppliancePage implements OnInit {
-
+export class UtilityPage implements OnInit {
   fileUploadTask: AngularFireUploadTask;
   percentageVal: Observable<number>;
   trackSnapshot: Observable<any>;
@@ -30,26 +28,20 @@ export class AppliancePage implements OnInit {
   imgSize: number;
   isFileUploading: boolean;
   isFileUploaded: boolean;
-  isImageUpload: boolean;
 
-  isUpdateMode: boolean;
-
-  id: number;
   name: string;
   description: string;
   media: string;
 
   file;
-  result: string = "";
-  appliances: Object[];
+  result: string="";
 
   private filesCollection: AngularFirestoreCollection<imgFile>;
 
   constructor(
     private afs: AngularFirestore,
     private afStorage: AngularFireStorage,
-    private serverClient: ApplianceClientService,
-    private util: commonUtil
+    private serverClient: ApplianceClientService
   ) {
     this.isFileUploading = false;
     this.isFileUploaded = false;
@@ -59,36 +51,26 @@ export class AppliancePage implements OnInit {
     this.files = this.filesCollection.valueChanges();
   }
   ngOnInit(): void {
-    this.getAllAppliances();
+
   }
 
   selectImage(event: FileList) {
     this.file = event.item(0)
-    this.result = ""
+    this.result=""
   }
 
 
-  submit() {
-    if(this.isUpdateMode){
-      if (!this.file && !this.media){
-        this.result = "Appliance image is not selected"
-        return
-        }
-    }
-    else {
-      if (!this.file){
-      this.result = "Appliance image is not selected"
-      return
-      }
-    }
-    if (!this.name) {
-      this.result = "Name field is mandatory"
+  uploadImage() {
+    if(!this.file){
+      this.result="Appliance image is not selected"
       return
     }
-    this.isImageUpload = true
-    this.result = ""
-    if(this.file){
-    if ( this.file.type.split('/')[0] !== 'image') {
+    if(!this.name){
+      this.result="Name field is mandatory"
+      return
+    }
+    this.result=""
+    if (this.file.type.split('/')[0] !== 'image') {
       console.log('File type is not supported!')
       return;
     }
@@ -117,8 +99,7 @@ export class AppliancePage implements OnInit {
           this.isFileUploading = false;
           this.isFileUploaded = true;
 
-          if(this.isUpdateMode)this.updateAppliance();
-          else this.createNewAppliance();
+          this.createNewAppliance();
         }, error => {
           console.log(error);
         })
@@ -127,9 +108,6 @@ export class AppliancePage implements OnInit {
         this.imgSize = snap.totalBytes;
       })
     )
-    }else{
-      if(this.isUpdateMode)this.updateAppliance();
-    }
   }
 
 
@@ -143,24 +121,6 @@ export class AppliancePage implements OnInit {
   //   });
   // }
 
-
-
-  updateAppliance() {
-    var appliance: Appliance = {
-      "id": this.id,
-      "name": this.name,
-      "media": this.media,
-      "description": this.description
-    }
-
-    this.serverClient.updateAppliance(appliance).subscribe(d => {
-      this.clearFields();
-      this.getAllAppliances();
-    }, error => {
-      console.log(error);
-    });
-  }
-
   createNewAppliance() {
     var appliance: Appliance = {
       "name": this.name,
@@ -169,36 +129,10 @@ export class AppliancePage implements OnInit {
     }
 
     this.serverClient.createNewAppliance(appliance).subscribe(d => {
-      this.clearFields();
-      this.getAllAppliances();
+      console.log(d)
     }, error => {
       console.log(error);
     });
-  }
-  clearFields() {
-    this.name = null;
-    this.description = null;
-    this.file = null;
-    this.isImageUpload = false
-    this.id = 0;
-    this.isUpdateMode = false
-  }
-
-  getAllAppliances() {
-    this.serverClient.getAllAppliances().subscribe(d => {
-      this.appliances = this.util.getDataFromResponse(d)
-    }, error => {
-      console.log(error);
-    });
-  }
-
-  update(appliance: Appliance) {
-    console.log(appliance.media);
-    this.id = appliance.id;
-    this.media = appliance.media;
-    this.name = appliance.name;
-    this.description = appliance.description
-    this.isUpdateMode = true;
   }
 
 }

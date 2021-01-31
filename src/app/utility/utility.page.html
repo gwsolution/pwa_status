@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Utility Service Management</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <ion-card class="ion-text-center" *ngIf="!isUploading && !isUploaded">
+      <ion-card-header>
+        <ion-card-title>Add Utility Service</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Utility Service name</ion-label>
+          <ion-input clearInput placeholder="please enter name here" [(ngModel)]="name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Utility Service description</ion-label>
+          <ion-input clearInput placeholder="please enter description here" [(ngModel)]="description"></ion-input>
+        </ion-item>
+        <ion-row class="ion-padding ion-align-items-center">
+          <ion-col size="12">Choose Utility Service Image to Upload</ion-col>
+          <ion-col size="12">
+            <ion-button color="primary">
+              <input id="myFile" type="file" (change)="selectImage($event.target.files)" >
+                        </ion-button>
+          </ion-col>
+          <ion-col size="12">
+            <div *ngIf="percentageVal | async as percentage">
+              Progress: {{ percentage | number }}%
+              <ion-progress-bar value="{{ percentage / 100 }}"></ion-progress-bar>
+            </div>
+          </ion-col>
+          <ion-col size="12">
+            <div *ngIf="trackSnapshot | async as snap">
+              File size: {{ snap.totalBytes | formatFileSize }}
+              <span *ngIf="snap.bytesTransferred">
+                Data transfered: {{ snap.bytesTransferred | formatFileSize }}
+              </span>
+            </div>
+          </ion-col>
+
+        </ion-row>
+
+
+        <ion-row class="ion-align-items-center">
+          <ion-col>
+            <ion-button color="primary" shape="round" size="medium" (click)="uploadImage()">
+              Save Appliance
+            </ion-button>
+          </ion-col>
+          <ion-col size="12" >
+            <ion-label color="danger">
+              {{result}}
+            </ion-label>
+          </ion-col>
+        </ion-row>
+
+      </ion-card-content>
+    </ion-card>
+
+
+  </div>
+</ion-content>

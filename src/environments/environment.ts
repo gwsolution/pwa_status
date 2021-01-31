@@ -7,6 +7,7 @@ export const environment = {
   BASE_URL:"https://api.planbell.com:8443/",
   // BASE_URL:"https://localhost:8443/",
   USER_API:"user",
+  APPLIANCE_API:"appliance",
   REFRESH_TOKEN_API:"token/",
   ALL_USER_API:"/all",
   SEARCH_USER_API:"/search",

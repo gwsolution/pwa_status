@@ -44,7 +44,11 @@ export class AppComponent {
         title : "Appiance Management",
         url   : "/appliance",
         icon  : "rocket-outline"
-      },
+      },{
+        title : "Utility Service Management",
+        url   : "/utility",
+        icon  : "build-outline"
+      }
     ]
   }
 }

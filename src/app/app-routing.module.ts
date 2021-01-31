@@ -24,6 +24,10 @@ const routes: Routes = [
     path: 'appliance',
     loadChildren: () => import('./appliance/appliance.module').then( m => m.AppliancePageModule)
   },
+  {
+    path: 'utility',
+    loadChildren: () => import('./utility/utility.module').then( m => m.UtilityPageModule)
+  },
 ];
 
 @NgModule({
