@@ -7,6 +7,7 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 import { ApplianceClientService } from 'src/providers/server-util/appliance-client.service';
 import { Appliance } from 'src/providers/pojo/appliance';
 import { commonUtil } from 'src/providers/util/commonUtil';
+import { AlertController } from '@ionic/angular';
 
 export interface imgFile {
   name: string;
@@ -33,15 +34,18 @@ export class AppliancePage implements OnInit {
   isImageUpload: boolean;
 
   isUpdateMode: boolean;
-
+  isEnabled:boolean;
   id: number;
   name: string;
   description: string;
   media: string;
+  order:number;
 
   file;
   result: string = "";
   appliances: Object[];
+
+  save_button_text: string="Save Appliance";
 
   private filesCollection: AngularFirestoreCollection<imgFile>;
 
@@ -49,7 +53,7 @@ export class AppliancePage implements OnInit {
     private afs: AngularFirestore,
     private afStorage: AngularFireStorage,
     private serverClient: ApplianceClientService,
-    private util: commonUtil
+    private util: commonUtil, private alertController: AlertController
   ) {
     this.isFileUploading = false;
     this.isFileUploaded = false;
@@ -67,68 +71,74 @@ export class AppliancePage implements OnInit {
     this.result = ""
   }
 
-
+  enableAdd(){
+    this.isEnabled = true;
+  }
   submit() {
-    if(this.isUpdateMode){
-      if (!this.file && !this.media){
+    if (this.isUpdateMode) {
+      if (!this.file && !this.media) {
         this.result = "Appliance image is not selected"
         return
-        }
+      }
     }
     else {
-      if (!this.file){
-      this.result = "Appliance image is not selected"
-      return
+      if (!this.file) {
+        this.result = "Appliance image is not selected"
+        return
       }
     }
     if (!this.name) {
       this.result = "Name field is mandatory"
       return
     }
+    if (!this.order) {
+      this.result = "Order field is mandatory"
+      return
+    }
     this.isImageUpload = true
     this.result = ""
-    if(this.file){
-    if ( this.file.type.split('/')[0] !== 'image') {
-      console.log('File type is not supported!')
-      return;
-    }
+    if (this.file) {
+      if (this.file.type.split('/')[0] !== 'image') {
+        console.log('File type is not supported!')
+        return;
+      }
 
-    this.isFileUploading = true;
-    this.isFileUploaded = false;
-    this.imgName = this.file.name;
-    const fileStoragePath = `appliance/${new Date().getTime()}_${this.file.name}`;
-    const imageRef = this.afStorage.ref(fileStoragePath);
-    this.fileUploadTask = this.afStorage.upload(fileStoragePath, this.file);
-    this.percentageVal = this.fileUploadTask.percentageChanges();
-    this.trackSnapshot = this.fileUploadTask.snapshotChanges().pipe(
+      this.isFileUploading = true;
+      this.isFileUploaded = false;
+      this.imgName = this.file.name;
+      const fileStoragePath = `appliance/${new Date().getTime()}_${this.file.name}`;
+      const imageRef = this.afStorage.ref(fileStoragePath);
+      this.fileUploadTask = this.afStorage.upload(fileStoragePath, this.file);
+      this.percentageVal = this.fileUploadTask.percentageChanges();
+      this.trackSnapshot = this.fileUploadTask.snapshotChanges().pipe(
 
-      finalize(() => {
-        this.UploadedImageURL = imageRef.getDownloadURL();
+        finalize(() => {
+          this.UploadedImageURL = imageRef.getDownloadURL();
 
-        this.UploadedImageURL.subscribe(resp => {
+          this.UploadedImageURL.subscribe(resp => {
 
-          this.media = resp;
+            this.media = resp;
 
-          // this.storeFilesFirebase({
-          //   name: this.file.name,
-          //   filepath: resp,
-          //   size: this.imgSize
-          // });
-          this.isFileUploading = false;
-          this.isFileUploaded = true;
+            // this.storeFilesFirebase({
+            //   name: this.file.name,
+            //   filepath: resp,
+            //   size: this.imgSize
+            // });
+            this.isFileUploading = false;
+            this.isFileUploaded = true;
 
-          if(this.isUpdateMode)this.updateAppliance();
-          else this.createNewAppliance();
-        }, error => {
-          console.log(error);
+            if (this.isUpdateMode) this.updateAppliance();
+            else this.createNewAppliance();
+          }, error => {
+            console.log(error);
+          })
+        }),
+        tap(snap => {
+          this.imgSize = snap.totalBytes;
         })
-      }),
-      tap(snap => {
-        this.imgSize = snap.totalBytes;
-      })
-    )
-    }else{
-      if(this.isUpdateMode)this.updateAppliance();
+      )
+    } else {
+      if (this.isUpdateMode) this.updateAppliance();
     }
   }
 
@@ -150,7 +160,8 @@ export class AppliancePage implements OnInit {
       "id": this.id,
       "name": this.name,
       "media": this.media,
-      "description": this.description
+      "description": this.description,
+      "displayOrder": this.order
     }
 
     this.serverClient.updateAppliance(appliance).subscribe(d => {
@@ -165,7 +176,8 @@ export class AppliancePage implements OnInit {
     var appliance: Appliance = {
       "name": this.name,
       "media": this.media,
-      "description": this.description
+      "description": this.description,
+      "displayOrder": this.order
     }
 
     this.serverClient.createNewAppliance(appliance).subscribe(d => {
@@ -181,7 +193,12 @@ export class AppliancePage implements OnInit {
     this.file = null;
     this.isImageUpload = false
     this.id = 0;
+    this.media=null;
+    this.order=null;
+    this.isEnabled = false;
+
     this.isUpdateMode = false
+    this.save_button_text="Save Appliance";
   }
 
   getAllAppliances() {
@@ -192,13 +209,50 @@ export class AppliancePage implements OnInit {
     });
   }
 
+  cancel(){
+    this.clearFields();
+  }
+
   update(appliance: Appliance) {
     console.log(appliance.media);
+    this.isEnabled = true;
+
     this.id = appliance.id;
     this.media = appliance.media;
     this.name = appliance.name;
+    this.order = appliance.displayOrder;
     this.description = appliance.description
     this.isUpdateMode = true;
+    this.result = ""
+    this.save_button_text="Update Appliance";
+  }
+
+  async delete(appliance) {
+    const alert = await this.alertController.create({
+      header: "Confirm Delete?",
+
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+
+          }
+        }, {
+          text: 'OK',
+          handler: () => {
+            this.serverClient.deleteAppliance(appliance.id).subscribe(d => { 
+              this.appliances.splice(this.appliances.indexOf(appliance), 1);            
+            }, error => {
+              console.log(error);
+            });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 }

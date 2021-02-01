@@ -1,7 +1,8 @@
-export interface Appliance {
+export interface ServiceType {
     id?: number;
     name: string;
     media: string;
     description:string;
-    displayOrder:number;
+    parent:number;
+    order:number;
 }

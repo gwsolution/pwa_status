@@ -20,6 +20,10 @@ export class ApplianceClientService {
     return this.http.get(environment.BASE_URL + environment.APPLIANCE_API, { headers: this.getRequestOptions() });
   }
 
+  public deleteAppliance(id): Observable<Object> {
+    return this.http.delete(environment.BASE_URL + environment.APPLIANCE_API+"/"+id, { headers: this.getRequestOptions() });
+  }
+
   public createNewAppliance(appliance: Appliance): Observable<Object> {
 
     return this.http.post(environment.BASE_URL + environment.APPLIANCE_API, appliance, { headers: this.getRequestOptions() });

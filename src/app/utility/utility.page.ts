@@ -28,6 +28,7 @@ export class UtilityPage implements OnInit {
   imgSize: number;
   isFileUploading: boolean;
   isFileUploaded: boolean;
+  isEnabled:boolean;
 
   name: string;
   description: string;
@@ -52,6 +53,10 @@ export class UtilityPage implements OnInit {
   }
   ngOnInit(): void {
 
+  }
+
+  enableAdd(){
+    this.isEnabled = true;
   }
 
   selectImage(event: FileList) {
@@ -99,7 +104,7 @@ export class UtilityPage implements OnInit {
           this.isFileUploading = false;
           this.isFileUploaded = true;
 
-          this.createNewAppliance();
+          // this.createNewAppliance();
         }, error => {
           console.log(error);
         })
@@ -121,18 +126,18 @@ export class UtilityPage implements OnInit {
   //   });
   // }
 
-  createNewAppliance() {
-    var appliance: Appliance = {
-      "name": this.name,
-      "media": this.media,
-      "description": this.description
-    }
+  // createNewAppliance() {
+  //   var appliance: Appliance = {
+  //     "name": this.name,
+  //     "media": this.media,
+  //     "description": this.description
+  //   }
 
-    this.serverClient.createNewAppliance(appliance).subscribe(d => {
-      console.log(d)
-    }, error => {
-      console.log(error);
-    });
-  }
+  //   this.serverClient.createNewAppliance(appliance).subscribe(d => {
+  //     console.log(d)
+  //   }, error => {
+  //     console.log(error);
+  //   });
+  // }
 
 }
