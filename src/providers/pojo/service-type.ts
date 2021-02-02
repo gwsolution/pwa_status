@@ -4,5 +4,6 @@ export interface ServiceType {
     media: string;
     description:string;
     parent:number;
-    order:number;
+    displayOrder:number;
+    applianceId:number;
 }

@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+
+import { serverClient } from 'src/providers/server-util/serverClient';
+import { commonUtil } from 'src/providers/util/commonUtil';
+
+
 import { finalize, tap } from 'rxjs/operators';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
-import { AngularFirestoreCollection } from '@angular/fire/firestore';
-import { ApplianceClientService } from 'src/providers/server-util/appliance-client.service';
-import { Appliance } from 'src/providers/pojo/appliance';
-import { commonUtil } from 'src/providers/util/commonUtil';
+
 import { AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { ServiceType } from 'src/providers/pojo/service-type';
+import { ServiceTypeClientService } from 'src/providers/server-util/service-type-client.service';
+
 
 export interface imgFile {
   name: string;
@@ -17,12 +21,11 @@ export interface imgFile {
 }
 
 @Component({
-  selector: 'app-appliance',
-  templateUrl: './appliance.page.html',
-  styleUrls: ['./appliance.page.scss'],
+  selector: 'app-service-type',
+  templateUrl: './service-type.page.html',
+  styleUrls: ['./service-type.page.scss'],
 })
-export class AppliancePage implements OnInit {
-
+export class ServiceTypePage implements OnInit {
   fileUploadTask: AngularFireUploadTask;
   percentageVal: Observable<number>;
   trackSnapshot: Observable<any>;
@@ -36,31 +39,49 @@ export class AppliancePage implements OnInit {
 
   isUpdateMode: boolean;
   isEnabled: boolean;
-  id: number;
+  id;
   name: string;
   description: string;
   media: string;
   order: number = 1;
+  parent: number = 0;
+  applianceId: number;
 
   file;
   result: string = "";
-  appliances: Object[];
+  serviceTypes: Object[];
 
   selected_lang = 'eng';
-  save_button_text: string = "Save Appliance";
+  save_button_text: string = "Save Service Type";
 
-
-  constructor(
+  title = null;
+  state$: Observable<object>;
+  appliance
+  constructor(private alertController: AlertController,
     private afStorage: AngularFireStorage,
-    private serverClient: ApplianceClientService,
-    private util: commonUtil, private alertController: AlertController, public router: Router
-  ) {
-    this.isFileUploading = false;
-    this.isFileUploaded = false;
+    private serverClient: ServiceTypeClientService, private activatedRoute: ActivatedRoute, private server: serverClient, private util: commonUtil, private router: Router) { }
 
-  }
-  ngOnInit(): void {
-    this.getAllAppliances();
+  ngOnInit() {
+    this.id = this.activatedRoute.snapshot.paramMap.get('id');
+    try {
+      this.appliance = this.router.getCurrentNavigation().extras.state['data'];
+      this.selected_lang = this.router.getCurrentNavigation().extras.state['lang'];
+      var isMain =  this.router.getCurrentNavigation().extras.state['isMain'];
+      if (this.appliance) {
+        this.title = this.appliance['name']
+        if(isMain){
+        this.applianceId = this.appliance['id']
+        }else{
+          this.applianceId = this.appliance['applianceId']
+          this.parent = this.appliance['id']
+        }
+        
+        this.getAllServiceType();
+      }
+    } catch (error) {
+      this.router.navigateByUrl('appliance');
+    }
+
   }
 
   selectImage(event: FileList) {
@@ -74,16 +95,20 @@ export class AppliancePage implements OnInit {
   submit() {
     if (this.isUpdateMode) {
       if (!this.file && !this.media) {
-        this.result = "Appliance image is not selected"
+        this.result = "Service Type image is not selected"
         return
       }
     }
     else {
       if (!this.file) {
-        this.result = "Appliance image is not selected"
+        this.result = "Service Type image is not selected"
         return
       }
     }
+    if (!this.parent) this.parent = 0;
+
+    if (!this.description) this.description = "";
+
     if (!this.name) {
       this.result = "Name field is mandatory"
       return
@@ -111,21 +136,12 @@ export class AppliancePage implements OnInit {
 
         finalize(() => {
           this.UploadedImageURL = imageRef.getDownloadURL();
-
           this.UploadedImageURL.subscribe(resp => {
-
             this.media = resp;
-
-            // this.storeFilesFirebase({
-            //   name: this.file.name,
-            //   filepath: resp,
-            //   size: this.imgSize
-            // });
             this.isFileUploading = false;
             this.isFileUploaded = true;
-
             if (this.isUpdateMode) this.updateAppliance();
-            else this.createNewAppliance();
+            else this.createNewServiceType();
           }, error => {
             console.log(error);
           })
@@ -139,48 +155,39 @@ export class AppliancePage implements OnInit {
     }
   }
 
-
-  // storeFilesFirebase(image: imgFile) {
-  //   const fileId = this.afs.createId();
-
-  //   this.filesCollection.doc(fileId).set(image).then(res => {
-  //     console.log(res);
-  //   }).catch(err => {
-  //     console.log(err);
-  //   });
-  // }
-
-
-
   updateAppliance() {
-    var appliance: Appliance = {
+    var serviceType: ServiceType = {
       "id": this.id,
       "name": this.name,
       "media": this.media,
       "description": this.description,
-      "displayOrder": this.order
+      "displayOrder": this.order,
+      "parent": this.parent,
+      "applianceId": this.applianceId
     }
 
-    this.serverClient.updateAppliance(appliance, this.selected_lang).subscribe(d => {
+    this.serverClient.updateServiceType(serviceType, this.selected_lang).subscribe(d => {
       this.clearFields();
-      this.getAllAppliances();
+      this.getAllServiceType();
     }, error => {
       console.log(error);
       this.result = error.error.message;
     });
   }
 
-  createNewAppliance() {
-    var appliance: Appliance = {
+  createNewServiceType() {
+    var serviceType: ServiceType = {
       "name": this.name,
       "media": this.media,
       "description": this.description,
-      "displayOrder": this.order
+      "displayOrder": this.order,
+      "parent": this.parent,
+      "applianceId": this.applianceId
     }
 
-    this.serverClient.createNewAppliance(appliance, 'eng').subscribe(d => {
+    this.serverClient.createNewServiceType(serviceType, 'eng').subscribe(d => {
       this.clearFields();
-      this.getAllAppliances();
+      this.getAllServiceType();
     }, error => {
       console.log(error);
     });
@@ -199,35 +206,44 @@ export class AppliancePage implements OnInit {
     this.save_button_text = "Save Appliance";
   }
 
-  getAllAppliances(ev?) {
+  getAllServiceType(ev?) {
     if (ev)
       this.selected_lang = ev.detail.value;
-    this.serverClient.getAllAppliances(this.selected_lang).subscribe(d => {
-      this.appliances = this.util.getDataFromResponse(d)
-    }, error => {
-      console.log(error);
-    });
+    if (this.parent) {
+      this.serverClient.getAllServiceType(this.parent, this.selected_lang).subscribe(d => {
+        this.serviceTypes = this.util.getDataFromResponse(d)
+      }, error => {
+        console.log(error);
+      });
+    } else {
+      this.serverClient.getAllServiceTypeByAppliance(this.applianceId, this.selected_lang).subscribe(d => {
+        this.serviceTypes = this.util.getDataFromResponse(d)
+      }, error => {
+        console.log(error);
+      });
+    }
+
   }
 
   cancel() {
     this.clearFields();
   }
 
-  update(appliance: Appliance) {
-    console.log(appliance.media);
+  update(serviceType: ServiceType) {
     this.isEnabled = true;
-
-    this.id = appliance.id;
-    this.media = appliance.media;
-    this.name = appliance.name;
-    this.order = appliance.displayOrder;
-    this.description = appliance.description
+    this.id = serviceType.id;
+    this.media = serviceType.media;
+    this.name = serviceType.name;
+    this.order = serviceType.displayOrder;
+    this.description = serviceType.description
+    this.parent = serviceType.parent;
+    this.applianceId = serviceType.applianceId;
     this.isUpdateMode = true;
     this.result = ""
-    this.save_button_text = "Update Appliance";
+    this.save_button_text = "Update Service Type";
   }
 
-  async delete(appliance) {
+  async delete(serviceType) {
     const alert = await this.alertController.create({
       header: "Confirm Delete?",
 
@@ -242,8 +258,8 @@ export class AppliancePage implements OnInit {
         }, {
           text: 'OK',
           handler: () => {
-            this.serverClient.deleteAppliance(appliance.id, this.selected_lang).subscribe(d => {
-              this.appliances.splice(this.appliances.indexOf(appliance), 1);
+            this.serverClient.deleteServiceType(serviceType.id, this.selected_lang).subscribe(d => {
+              this.serviceTypes.splice(this.serviceTypes.indexOf(serviceType), 1);
             }, error => {
               console.log(error);
             });

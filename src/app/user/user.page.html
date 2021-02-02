@@ -41,7 +41,7 @@
               </ion-button>
             </ion-col>
             <ion-col size-md="1" class="ion-align-self-center">
-              <ion-toggle (click)="presentAlertConfirm($event,user)" color="dark" [(ngModel)]="user.status">
+              <ion-toggle (click)="$event.stopPropagation();$event.preventDefault();presentAlertConfirm($event,user)" color="dark" [(ngModel)]="user.status">
               </ion-toggle>
             </ion-col>
           </ion-row>
