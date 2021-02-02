@@ -37,6 +37,10 @@
           <ion-label position="stacked">Display order</ion-label>
           <ion-input clearInput placeholder="please enter order here" type="number" [(ngModel)]="order"></ion-input>
         </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Cost</ion-label>
+          <ion-input clearInput placeholder="please enter cost here" type="number" [(ngModel)]="cost"></ion-input>
+        </ion-item>
         <ion-row class="ion-padding ion-align-items-center">
           <ion-col size="12">Choose Service Type Image to Upload</ion-col>
           <ion-col *ngIf="media" size="12">

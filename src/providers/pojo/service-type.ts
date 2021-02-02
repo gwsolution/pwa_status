@@ -6,4 +6,5 @@ export interface ServiceType {
     parent:number;
     displayOrder:number;
     applianceId:number;
+    cost:number;
 }

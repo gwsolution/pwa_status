@@ -43,6 +43,7 @@ export class ServiceTypePage implements OnInit {
   name: string;
   description: string;
   media: string;
+  cost = 0.0;
   order: number = 1;
   parent: number = 0;
   applianceId: number;
@@ -66,16 +67,16 @@ export class ServiceTypePage implements OnInit {
     try {
       this.appliance = this.router.getCurrentNavigation().extras.state['data'];
       this.selected_lang = this.router.getCurrentNavigation().extras.state['lang'];
-      var isMain =  this.router.getCurrentNavigation().extras.state['isMain'];
+      var isMain = this.router.getCurrentNavigation().extras.state['isMain'];
       if (this.appliance) {
         this.title = this.appliance['name']
-        if(isMain){
-        this.applianceId = this.appliance['id']
-        }else{
+        if (isMain) {
+          this.applianceId = this.appliance['id']
+        } else {
           this.applianceId = this.appliance['applianceId']
           this.parent = this.appliance['id']
         }
-        
+
         this.getAllServiceType();
       }
     } catch (error) {
@@ -163,7 +164,8 @@ export class ServiceTypePage implements OnInit {
       "description": this.description,
       "displayOrder": this.order,
       "parent": this.parent,
-      "applianceId": this.applianceId
+      "applianceId": this.applianceId,
+      "cost": this.cost
     }
 
     this.serverClient.updateServiceType(serviceType, this.selected_lang).subscribe(d => {
@@ -182,7 +184,8 @@ export class ServiceTypePage implements OnInit {
       "description": this.description,
       "displayOrder": this.order,
       "parent": this.parent,
-      "applianceId": this.applianceId
+      "applianceId": this.applianceId,
+      "cost": this.cost
     }
 
     this.serverClient.createNewServiceType(serviceType, 'eng').subscribe(d => {
@@ -199,9 +202,10 @@ export class ServiceTypePage implements OnInit {
     this.isImageUpload = false
     this.id = 0;
     this.media = null;
-    this.order = null;
+    this.order = 1;
     this.isEnabled = false;
-
+    this.parent = 0;
+    this.cost = 0.0;
     this.isUpdateMode = false
     this.save_button_text = "Save Appliance";
   }
@@ -237,6 +241,7 @@ export class ServiceTypePage implements OnInit {
     this.order = serviceType.displayOrder;
     this.description = serviceType.description
     this.parent = serviceType.parent;
+    this.cost = serviceType.cost;
     this.applianceId = serviceType.applianceId;
     this.isUpdateMode = true;
     this.result = ""
