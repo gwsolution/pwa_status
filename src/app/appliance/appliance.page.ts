@@ -34,18 +34,19 @@ export class AppliancePage implements OnInit {
   isImageUpload: boolean;
 
   isUpdateMode: boolean;
-  isEnabled:boolean;
+  isEnabled: boolean;
   id: number;
   name: string;
   description: string;
   media: string;
-  order:number;
+  order: number;
 
   file;
   result: string = "";
   appliances: Object[];
 
-  save_button_text: string="Save Appliance";
+  selected_lang = 'eng';
+  save_button_text: string = "Save Appliance";
 
   private filesCollection: AngularFirestoreCollection<imgFile>;
 
@@ -71,7 +72,7 @@ export class AppliancePage implements OnInit {
     this.result = ""
   }
 
-  enableAdd(){
+  enableAdd() {
     this.isEnabled = true;
   }
   submit() {
@@ -164,11 +165,12 @@ export class AppliancePage implements OnInit {
       "displayOrder": this.order
     }
 
-    this.serverClient.updateAppliance(appliance).subscribe(d => {
+    this.serverClient.updateAppliance(appliance, this.selected_lang).subscribe(d => {
       this.clearFields();
       this.getAllAppliances();
     }, error => {
       console.log(error);
+      this.result = error.error.message;
     });
   }
 
@@ -180,7 +182,7 @@ export class AppliancePage implements OnInit {
       "displayOrder": this.order
     }
 
-    this.serverClient.createNewAppliance(appliance).subscribe(d => {
+    this.serverClient.createNewAppliance(appliance, 'eng').subscribe(d => {
       this.clearFields();
       this.getAllAppliances();
     }, error => {
@@ -193,23 +195,25 @@ export class AppliancePage implements OnInit {
     this.file = null;
     this.isImageUpload = false
     this.id = 0;
-    this.media=null;
-    this.order=null;
+    this.media = null;
+    this.order = null;
     this.isEnabled = false;
 
     this.isUpdateMode = false
-    this.save_button_text="Save Appliance";
+    this.save_button_text = "Save Appliance";
   }
 
-  getAllAppliances() {
-    this.serverClient.getAllAppliances().subscribe(d => {
+  getAllAppliances(ev?) {
+    if (ev)
+      this.selected_lang = ev.detail.value;
+    this.serverClient.getAllAppliances(this.selected_lang).subscribe(d => {
       this.appliances = this.util.getDataFromResponse(d)
     }, error => {
       console.log(error);
     });
   }
 
-  cancel(){
+  cancel() {
     this.clearFields();
   }
 
@@ -224,7 +228,7 @@ export class AppliancePage implements OnInit {
     this.description = appliance.description
     this.isUpdateMode = true;
     this.result = ""
-    this.save_button_text="Update Appliance";
+    this.save_button_text = "Update Appliance";
   }
 
   async delete(appliance) {
@@ -242,8 +246,8 @@ export class AppliancePage implements OnInit {
         }, {
           text: 'OK',
           handler: () => {
-            this.serverClient.deleteAppliance(appliance.id).subscribe(d => { 
-              this.appliances.splice(this.appliances.indexOf(appliance), 1);            
+            this.serverClient.deleteAppliance(appliance.id, this.selected_lang).subscribe(d => {
+              this.appliances.splice(this.appliances.indexOf(appliance), 1);
             }, error => {
               console.log(error);
             });
