@@ -10,30 +10,30 @@ import { ServiceType } from '../pojo/service-type';
 })
 export class ServiceTypeClientService {
 
-  private getRequestOptions(lang) {
-    return { 'Accept': 'application/json', 'content-type': 'application/json', 'Authorization': environment.AUTHORIZATION,'Access-Control-Allow-Origin': '*','allow-running-insecure-content':'true','lang':lang }
+  private getRequestOptions() {
+    return { 'Accept': 'application/json', 'content-type': 'application/json', 'Authorization': environment.AUTHORIZATION,'Access-Control-Allow-Origin': '*','allow-running-insecure-content':'true' }
   }
 
   constructor(public http: HttpClient) { }
 
   public getAllServiceTypeByAppliance(id,lang): Observable<Object> {
-    return this.http.get(environment.BASE_URL + environment.SERVICE_TYPE_API+"/"+environment.APPLIANCE_API+"/"+id, { headers: this.getRequestOptions(lang) });
+    return this.http.get(environment.BASE_URL + environment.SERVICE_TYPE_API+"/"+environment.APPLIANCE_API+"/"+id+"?lang="+lang, { headers: this.getRequestOptions() });
   }
 
   public getAllServiceType(id,lang): Observable<Object> {
-    return this.http.get(environment.BASE_URL + environment.SERVICE_TYPE_API+"/all"+"/"+id, { headers: this.getRequestOptions(lang) });
+    return this.http.get(environment.BASE_URL + environment.SERVICE_TYPE_API+"/all"+"/"+id+"?lang="+lang, { headers: this.getRequestOptions() });
   }
 
   public deleteServiceType(id,lang): Observable<Object> {
-    return this.http.delete(environment.BASE_URL + environment.SERVICE_TYPE_API+"/"+id, { headers: this.getRequestOptions(lang) });
+    return this.http.delete(environment.BASE_URL + environment.SERVICE_TYPE_API+"/"+id+"?lang="+lang, { headers: this.getRequestOptions() });
   }
 
   public createNewServiceType(serviceType: ServiceType, lang): Observable<Object> {
     console.log(lang)
-    return this.http.post(environment.BASE_URL + environment.SERVICE_TYPE_API, serviceType, { headers: this.getRequestOptions(lang) });
+    return this.http.post(environment.BASE_URL + environment.SERVICE_TYPE_API+"?lang="+lang, serviceType, { headers: this.getRequestOptions() });
   }
 
   public updateServiceType(serviceType: ServiceType, lang): Observable<Object> {
-    return this.http.put(environment.BASE_URL + environment.SERVICE_TYPE_API, serviceType, { headers: this.getRequestOptions(lang) });
+    return this.http.put(environment.BASE_URL + environment.SERVICE_TYPE_API+"?lang="+lang, serviceType, { headers: this.getRequestOptions() });
   }
 }
