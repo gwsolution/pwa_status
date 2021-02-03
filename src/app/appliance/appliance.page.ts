@@ -8,6 +8,7 @@ import { Appliance } from 'src/providers/pojo/appliance';
 import { commonUtil } from 'src/providers/util/commonUtil';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { DataService } from '../services/data.service';
 
 export interface imgFile {
   name: string;
@@ -43,7 +44,6 @@ export class AppliancePage implements OnInit {
 
   file;
   result: string = "";
-  appliances: Object[];
 
   selected_lang = 'eng';
   save_button_text: string = "Save Appliance";
@@ -52,14 +52,14 @@ export class AppliancePage implements OnInit {
   constructor(
     private afStorage: AngularFireStorage,
     private serverClient: ApplianceClientService,
-    private util: commonUtil, private alertController: AlertController, public router: Router
+    private util: commonUtil, private alertController: AlertController, public router: Router, private dataService: DataService
   ) {
     this.isFileUploading = false;
     this.isFileUploaded = false;
 
   }
   ngOnInit(): void {
-    this.getAllAppliances();
+    this.getAppliancesTree();
   }
 
   selectImage(event: FileList) {
@@ -162,7 +162,7 @@ export class AppliancePage implements OnInit {
 
     this.serverClient.updateAppliance(appliance, this.selected_lang).subscribe(d => {
       this.clearFields();
-      this.getAllAppliances();
+      this.dataService.updateAppliancesTree(this.selected_lang);
     }, error => {
       console.log(error);
       this.result = error.error.message;
@@ -179,7 +179,7 @@ export class AppliancePage implements OnInit {
 
     this.serverClient.createNewAppliance(appliance, 'eng').subscribe(d => {
       this.clearFields();
-      this.getAllAppliances();
+      this.dataService.updateAppliancesTree(this.selected_lang);
     }, error => {
       console.log(error);
     });
@@ -198,14 +198,26 @@ export class AppliancePage implements OnInit {
     this.save_button_text = "Save Appliance";
   }
 
-  getAllAppliances(ev?) {
+  // getAllAppliances(ev?) {
+  //   if (ev)
+  //     this.selected_lang = ev.detail.value;
+  //   this.serverClient.getAllAppliances(this.selected_lang).subscribe(d => {
+  //     this.dataService.appliances = this.util.getDataFromResponse(d)
+  //   }, error => {
+  //     console.log(error);
+  //   });
+  // }
+
+  getAppliancesTree(ev?) {
     if (ev)
       this.selected_lang = ev.detail.value;
-    this.serverClient.getAllAppliances(this.selected_lang).subscribe(d => {
-      this.appliances = this.util.getDataFromResponse(d)
-    }, error => {
-      console.log(error);
-    });
+      this.dataService.updateAppliancesTree(this.selected_lang);
+    // this.serverClient.getAppliancesTree(this.selected_lang).subscribe(d => {
+    //   this.dataService.appliances = this.util.getDataFromResponse(d)
+    //   this.dataService.setApplianceTree(this.dataService.appliances)
+    // }, error => {
+    //   console.log(error);
+    // });
   }
 
   cancel() {
@@ -242,7 +254,7 @@ export class AppliancePage implements OnInit {
           text: 'OK',
           handler: () => {
             this.serverClient.deleteAppliance(appliance.id, this.selected_lang).subscribe(d => {
-              this.appliances.splice(this.appliances.indexOf(appliance), 1);
+              this.dataService.appliances.splice(this.dataService.appliances.indexOf(appliance), 1);
             }, error => {
               console.log(error);
             });

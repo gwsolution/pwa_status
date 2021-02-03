@@ -12,6 +12,7 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { AlertController } from '@ionic/angular';
 import { ServiceType } from 'src/providers/pojo/service-type';
 import { ServiceTypeClientService } from 'src/providers/server-util/service-type-client.service';
+import { DataService } from '../services/data.service';
 
 
 export interface imgFile {
@@ -47,37 +48,40 @@ export class ServiceTypePage implements OnInit {
   order: number = 1;
   parent: number = 0;
   applianceId: number;
-
+  serviceTypes: Object[];
   file;
   result: string = "";
-  serviceTypes: Object[];
+ 
 
   selected_lang = 'eng';
   save_button_text: string = "Save Service Type";
+  selected_appliance;
 
   title = null;
   state$: Observable<object>;
-  appliance
+  // appliance
   constructor(private alertController: AlertController,
     private afStorage: AngularFireStorage,
-    private serverClient: ServiceTypeClientService, private activatedRoute: ActivatedRoute, private server: serverClient, private util: commonUtil, private router: Router) { }
+    private serverClient: ServiceTypeClientService, private activatedRoute: ActivatedRoute, private server: serverClient, private util: commonUtil, private router: Router, private dataService: DataService) { }
 
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     try {
-      this.appliance = this.router.getCurrentNavigation().extras.state['data'];
+      this.selected_appliance = this.router.getCurrentNavigation().extras.state['data'];
       this.selected_lang = this.router.getCurrentNavigation().extras.state['lang'];
       var isMain = this.router.getCurrentNavigation().extras.state['isMain'];
-      if (this.appliance) {
-        this.title = this.appliance['name']
+      var index = this.router.getCurrentNavigation().extras.state['index'];
+      console.log(index);
+      if (this.selected_appliance) {
+        this.title = this.selected_appliance['name']
         if (isMain) {
-          this.applianceId = this.appliance['id']
+          this.applianceId = this.selected_appliance['id']
+          this.serviceTypes = this.dataService.appliances_map.get(this.applianceId);
         } else {
-          this.applianceId = this.appliance['applianceId']
-          this.parent = this.appliance['id']
+          this.applianceId = this.selected_appliance['applianceId']
+          this.parent = this.selected_appliance['id']
+          this.serviceTypes = this.dataService.service_type_map.get(this.parent);
         }
-
-        this.getAllServiceType();
       }
     } catch (error) {
       this.router.navigateByUrl('appliance');
@@ -171,6 +175,7 @@ export class ServiceTypePage implements OnInit {
     this.serverClient.updateServiceType(serviceType, this.selected_lang).subscribe(d => {
       this.clearFields();
       this.getAllServiceType();
+
     }, error => {
       console.log(error);
       this.result = error.error.message;
@@ -191,6 +196,7 @@ export class ServiceTypePage implements OnInit {
     this.serverClient.createNewServiceType(serviceType, 'eng').subscribe(d => {
       this.clearFields();
       this.getAllServiceType();
+
     }, error => {
       console.log(error);
     });
@@ -204,7 +210,6 @@ export class ServiceTypePage implements OnInit {
     this.media = null;
     this.order = 1;
     this.isEnabled = false;
-    this.parent = 0;
     this.cost = 0.0;
     this.isUpdateMode = false
     this.save_button_text = "Save Appliance";
@@ -213,21 +218,38 @@ export class ServiceTypePage implements OnInit {
   getAllServiceType(ev?) {
     if (ev)
       this.selected_lang = ev.detail.value;
-    if (this.parent) {
-      this.serverClient.getAllServiceType(this.parent, this.selected_lang).subscribe(d => {
-        this.serviceTypes = this.util.getDataFromResponse(d)
-      }, error => {
-        console.log(error);
-      });
-    } else {
-      this.serverClient.getAllServiceTypeByAppliance(this.applianceId, this.selected_lang).subscribe(d => {
-        this.serviceTypes = this.util.getDataFromResponse(d)
-      }, error => {
-        console.log(error);
-      });
+      else
+      this.selected_lang = 'eng'
+      var callback = () : void => {
+        this.updateServiceType();
     }
+    console.log(this.parent)
+      this.dataService.updateAppliancesTree(this.selected_lang,callback);
+    // if (this.parent) {
+    //   this.serverClient.getAllServiceType(this.parent, this.selected_lang).subscribe(d => {
+    //     this.dataService.serviceTypes = this.util.getDataFromResponse(d)
+    //   }, error => {
+    //     console.log(error);
+    //   });
+    // } else {
+    //   this.serverClient.getAllServiceTypeByAppliance(this.applianceId, this.selected_lang).subscribe(d => {
+    //     this.dataService.serviceTypes = this.util.getDataFromResponse(d)
+    //   }, error => {
+    //     console.log(error);
+    //   });
+    // }
 
   }
+
+  updateServiceType(): any{
+    if (this.parent) {
+      this.serviceTypes = this.dataService.service_type_map.get(this.parent);
+    } else {
+      this.serviceTypes = this.dataService.appliances_map.get(this.applianceId);
+    }
+  }
+
+  
 
   cancel() {
     this.clearFields();

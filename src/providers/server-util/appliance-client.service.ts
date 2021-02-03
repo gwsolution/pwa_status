@@ -17,8 +17,11 @@ export class ApplianceClientService {
   constructor(public http: HttpClient) { }
 
   public getAllAppliances(lang): Observable<Object> {
-    console.log(lang)
     return this.http.get(environment.BASE_URL + environment.APPLIANCE_API+"?lang="+lang, { headers: this.getRequestOptions() });
+  }
+
+  public getAppliancesTree(lang): Observable<Object> {
+    return this.http.get(environment.BASE_URL + environment.APPLIANCE_API+"/"+environment.TREE_API+"?lang="+lang, { headers: this.getRequestOptions() });
   }
 
   public deleteAppliance(id,lang): Observable<Object> {

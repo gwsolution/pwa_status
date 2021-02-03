@@ -13,7 +13,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-item>
-    <ion-select slot="end" interface="popover" (ionChange)="getAllAppliances($event)" [value]="selected_lang">
+    <ion-select slot="end" interface="popover" (ionChange)="getAppliancesTree($event)" [value]="selected_lang">
       <ion-select-option value="eng">English</ion-select-option>
       <ion-select-option value="hin">Hindi</ion-select-option>
     </ion-select>
@@ -86,8 +86,8 @@
     </ion-card>
   </div>
 
-  <ion-list *ngIf="appliances">
-    <ion-item class="center" routerLink="/appliance/{{appliance.id}}" [state]="{data: appliance, lang: selected_lang, isMain: true}" *ngFor="let appliance of appliances">
+  <ion-list *ngIf="dataService.appliances">
+    <ion-item class="center" routerLink="/appliance/{{appliance.id}}" [state]="{data: appliance, lang: selected_lang, isMain: true, index: i}" *ngFor="let appliance of dataService.appliances; let i =index;">
 
       <ion-col size="12">
         <ion-card>

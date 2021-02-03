@@ -9,6 +9,7 @@ export const environment = {
   USER_API:"user",
   APPLIANCE_API:"appliance",
   UTILITY_API:"utility",
+  TREE_API:"tree",
   SERVICE_TYPE_API:"service",
   UTILITY_SERVICE_TYPE_API:"utility/service",
   REFRESH_TOKEN_API:"token/",
