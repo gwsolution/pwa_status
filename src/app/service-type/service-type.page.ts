@@ -13,6 +13,7 @@ import { AlertController } from '@ionic/angular';
 import { ServiceType } from 'src/providers/pojo/service-type';
 import { ServiceTypeClientService } from 'src/providers/server-util/service-type-client.service';
 import { DataService } from '../services/data.service';
+import { Location } from '@angular/common';
 
 
 export interface imgFile {
@@ -51,9 +52,11 @@ export class ServiceTypePage implements OnInit {
   serviceTypes: Object[];
   file;
   result: string = "";
- 
 
-  selected_lang = 'eng';
+
+
+  is_page_back = false;
+
   save_button_text: string = "Save Service Type";
   selected_appliance;
 
@@ -62,16 +65,17 @@ export class ServiceTypePage implements OnInit {
   // appliance
   constructor(private alertController: AlertController,
     private afStorage: AngularFireStorage,
-    private serverClient: ServiceTypeClientService, private activatedRoute: ActivatedRoute, private server: serverClient, private util: commonUtil, private router: Router, private dataService: DataService) { }
+    private serverClient: ServiceTypeClientService, private activatedRoute: ActivatedRoute, private server: serverClient, private util: commonUtil, private router: Router, private dataService: DataService, private _location: Location) { }
 
   ngOnInit() {
+    console.log('yes')
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     try {
       this.selected_appliance = this.router.getCurrentNavigation().extras.state['data'];
-      this.selected_lang = this.router.getCurrentNavigation().extras.state['lang'];
+
+      
       var isMain = this.router.getCurrentNavigation().extras.state['isMain'];
-      var index = this.router.getCurrentNavigation().extras.state['index'];
-      console.log(index);
+
       if (this.selected_appliance) {
         this.title = this.selected_appliance['name']
         if (isMain) {
@@ -82,12 +86,19 @@ export class ServiceTypePage implements OnInit {
           this.parent = this.selected_appliance['id']
           this.serviceTypes = this.dataService.service_type_map.get(this.parent);
         }
+      }else{
+        this._location.back();
       }
     } catch (error) {
-      this.router.navigateByUrl('appliance');
+      this._location.back();
     }
 
   }
+
+  ionViewDidEnter(){
+  
+  }
+
 
   selectImage(event: FileList) {
     this.file = event.item(0)
@@ -172,7 +183,7 @@ export class ServiceTypePage implements OnInit {
       "cost": this.cost
     }
 
-    this.serverClient.updateServiceType(serviceType, this.selected_lang).subscribe(d => {
+    this.serverClient.updateServiceType(serviceType, this.dataService.selected_lang).subscribe(d => {
       this.clearFields();
       this.getAllServiceType();
 
@@ -216,15 +227,21 @@ export class ServiceTypePage implements OnInit {
   }
 
   getAllServiceType(ev?) {
-    if (ev)
-      this.selected_lang = ev.detail.value;
+
+   
+      if (ev)
+        this.dataService.selected_lang = ev.detail.value;
       else
-      this.selected_lang = 'eng'
-      var callback = () : void => {
+        this.dataService.selected_lang = 'eng'
+
+      
+      var callback = (): void => {
         this.updateServiceType();
-    }
-    console.log(this.parent)
-      this.dataService.updateAppliancesTree(this.selected_lang,callback);
+      }
+      console.log(this.parent)
+      this.dataService.updateAppliancesTree(this.dataService.selected_lang, callback);
+    
+
     // if (this.parent) {
     //   this.serverClient.getAllServiceType(this.parent, this.selected_lang).subscribe(d => {
     //     this.dataService.serviceTypes = this.util.getDataFromResponse(d)
@@ -241,7 +258,7 @@ export class ServiceTypePage implements OnInit {
 
   }
 
-  updateServiceType(): any{
+  updateServiceType(): any {
     if (this.parent) {
       this.serviceTypes = this.dataService.service_type_map.get(this.parent);
     } else {
@@ -249,7 +266,7 @@ export class ServiceTypePage implements OnInit {
     }
   }
 
-  
+
 
   cancel() {
     this.clearFields();
@@ -285,7 +302,7 @@ export class ServiceTypePage implements OnInit {
         }, {
           text: 'OK',
           handler: () => {
-            this.serverClient.deleteServiceType(serviceType.id, this.selected_lang).subscribe(d => {
+            this.serverClient.deleteServiceType(serviceType.id, this.dataService.selected_lang).subscribe(d => {
               this.serviceTypes.splice(this.serviceTypes.indexOf(serviceType), 1);
             }, error => {
               console.log(error);

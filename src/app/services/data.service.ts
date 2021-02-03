@@ -9,7 +9,7 @@ export class DataService {
   appliances: Object[];
   appliances_map = new Map(); 
   service_type_map = new Map();
- 
+  selected_lang = 'eng';
 
   constructor(private serverClient: ApplianceClientService, private util: commonUtil) { }
 

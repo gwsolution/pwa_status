@@ -13,7 +13,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-item>
-    <ion-select slot="end" interface="popover" (ionChange)="getAllServiceType($event)" [value]="selected_lang">
+    <ion-select slot="end" interface="popover" (ionChange)="getAllServiceType($event)" [value]="this.dataService.selected_lang">
       <ion-select-option value="eng">English</ion-select-option>
       <ion-select-option value="hin">Hindi</ion-select-option>
     </ion-select>
@@ -95,7 +95,7 @@
   </div>
 
   <ion-list *ngIf="this.serviceTypes">
-    <ion-item class="center" (click)="$event.stopPropagation();$event.preventDefault()" routerLink="/appliance/{{serviceType.id}}" [state]="{data: serviceType, lang: selected_lang, isMain: false}" *ngFor="let serviceType of this.serviceTypes">
+    <ion-item class="center" (click)="$event.stopPropagation();$event.preventDefault()" routerLink="/appliance/{{serviceType.id}}" [state]="{data: serviceType, lang: this.dataService.selected_lang, isMain: false}" *ngFor="let serviceType of this.serviceTypes">
 
       <ion-col size="12">
         <ion-card>

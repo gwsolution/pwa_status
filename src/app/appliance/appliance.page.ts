@@ -45,7 +45,8 @@ export class AppliancePage implements OnInit {
   file;
   result: string = "";
 
-  selected_lang = 'eng';
+
+  appliances: Object[];
   save_button_text: string = "Save Appliance";
 
 
@@ -160,13 +161,21 @@ export class AppliancePage implements OnInit {
       "displayOrder": this.order
     }
 
-    this.serverClient.updateAppliance(appliance, this.selected_lang).subscribe(d => {
+    var callback = (): void => {
+      this.updateList();
+    }
+
+    this.serverClient.updateAppliance(appliance, this.dataService.selected_lang).subscribe(d => {
       this.clearFields();
-      this.dataService.updateAppliancesTree(this.selected_lang);
+      this.dataService.updateAppliancesTree(this.dataService.selected_lang,callback);
     }, error => {
       console.log(error);
       this.result = error.error.message;
     });
+  }
+
+  updateList(): any {
+    this.appliances = this.dataService.appliances;
   }
 
   createNewAppliance() {
@@ -176,10 +185,13 @@ export class AppliancePage implements OnInit {
       "description": this.description,
       "displayOrder": this.order
     }
+    var callback = (): void => {
+      this.updateList();
+    }
 
     this.serverClient.createNewAppliance(appliance, 'eng').subscribe(d => {
       this.clearFields();
-      this.dataService.updateAppliancesTree(this.selected_lang);
+      this.dataService.updateAppliancesTree(this.dataService.selected_lang, callback);
     }, error => {
       console.log(error);
     });
@@ -210,8 +222,12 @@ export class AppliancePage implements OnInit {
 
   getAppliancesTree(ev?) {
     if (ev)
-      this.selected_lang = ev.detail.value;
-      this.dataService.updateAppliancesTree(this.selected_lang);
+      this.dataService.selected_lang = ev.detail.value;
+      var callback = (): void => {
+        this.updateList();
+      }
+      this.dataService.updateAppliancesTree(this.dataService.selected_lang, callback);
+
     // this.serverClient.getAppliancesTree(this.selected_lang).subscribe(d => {
     //   this.dataService.appliances = this.util.getDataFromResponse(d)
     //   this.dataService.setApplianceTree(this.dataService.appliances)
@@ -253,7 +269,7 @@ export class AppliancePage implements OnInit {
         }, {
           text: 'OK',
           handler: () => {
-            this.serverClient.deleteAppliance(appliance.id, this.selected_lang).subscribe(d => {
+            this.serverClient.deleteAppliance(appliance.id, this.dataService.selected_lang).subscribe(d => {
               this.dataService.appliances.splice(this.dataService.appliances.indexOf(appliance), 1);
             }, error => {
               console.log(error);
