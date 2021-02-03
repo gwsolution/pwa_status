@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
-import { AngularFirestoreCollection } from '@angular/fire/firestore';
 import { ApplianceClientService } from 'src/providers/server-util/appliance-client.service';
 import { Appliance } from 'src/providers/pojo/appliance';
 import { commonUtil } from 'src/providers/util/commonUtil';
