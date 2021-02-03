@@ -7,13 +7,13 @@
       <ion-icon slot="icon-only" name="add-outline"></ion-icon>
     </ion-button>
     
-    <ion-title>Utility Management</ion-title>
+    <ion-title *ngIf="title">{{title}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-item>
-    <ion-select slot="end" interface="popover" (ionChange)="getAllUtility($event)" [value]="selected_lang">
+    <ion-select slot="end" interface="popover" (ionChange)="getAllServiceType($event)" [value]="selected_lang">
       <ion-select-option value="eng">English</ion-select-option>
       <ion-select-option value="hin">Hindi</ion-select-option>
     </ion-select>
@@ -22,19 +22,27 @@
     <ion-card class="ion-text-center" *ngIf="!isUploading && !isUploaded">
       <ion-card-content>
         <ion-item>
-          <ion-label position="stacked">Utility name</ion-label>
+          <ion-label position="stacked">Service Type name</ion-label>
           <ion-input clearInput placeholder="please enter name here" [(ngModel)]="name"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="stacked">Utility description</ion-label>
+          <ion-label position="stacked">Service Type description</ion-label>
           <ion-input clearInput placeholder="please enter description here" [(ngModel)]="description"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Service Type parent</ion-label>
+          <ion-input clearInput placeholder="please enter parent id here" type="number" [(ngModel)]="parent"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="stacked">Display order</ion-label>
           <ion-input clearInput placeholder="please enter order here" type="number" [(ngModel)]="order"></ion-input>
         </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Cost</ion-label>
+          <ion-input clearInput placeholder="please enter cost here" type="number" [(ngModel)]="cost"></ion-input>
+        </ion-item>
         <ion-row class="ion-padding ion-align-items-center">
-          <ion-col size="12">Choose Utility Image to Upload</ion-col>
+          <ion-col size="12">Choose Service Type Image to Upload</ion-col>
           <ion-col *ngIf="media" size="12">
             <ion-thumbnail>
               <img src="{{media}}">
@@ -86,28 +94,30 @@
     </ion-card>
   </div>
 
-  <ion-list *ngIf="utilityList">
-    <ion-item class="center" routerLink="/utility/{{utility.id}}" [state]="{data: utility, lang: selected_lang, isMain: true}" *ngFor="let utility of utilityList">
+  <ion-list *ngIf="serviceTypes">
+    <ion-item class="center" (click)="$event.stopPropagation();$event.preventDefault()" routerLink="/utility/{{serviceType.id}}" [state]="{data: serviceType, lang: selected_lang, isMain: false}" *ngFor="let serviceType of serviceTypes">
+
       <ion-col size="12">
         <ion-card>
+
           <ion-row>
             <ion-col size-md="1">
               <ion-thumbnail>
-                <img src="{{utility.media}}">
+                <img src="{{serviceType.media}}">
               </ion-thumbnail>
             </ion-col>
-            <ion-col size-md="1" class="ion-align-self-center"><span>{{utility.id}}</span></ion-col>
+            <ion-col size-md="1" class="ion-align-self-center"><span>{{serviceType.id}}</span></ion-col>
             <ion-col size-md="8" class="ion-align-self-center">
-              <p>{{utility.name}}</p>
+              <p>{{serviceType.name}}</p>
             </ion-col>
             
             <ion-col size-md="1" class="ion-align-self-center">
-              <ion-button (click)="$event.stopPropagation();$event.preventDefault();update(utility)">
+              <ion-button (click)="$event.stopPropagation();$event.preventDefault();update(serviceType)">
                 <ion-icon slot="icon-only" name="create-outline"></ion-icon>
               </ion-button>
             </ion-col>
             <ion-col size-md="1" class="ion-align-self-center">
-              <ion-button (click)="$event.stopPropagation();$event.preventDefault();delete(utility)">
+              <ion-button (click)="$event.stopPropagation();$event.preventDefault();delete(serviceType)">
                 <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
               </ion-button>
             </ion-col>

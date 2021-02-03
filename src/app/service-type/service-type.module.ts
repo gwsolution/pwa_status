@@ -7,16 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { ServiceTypePageRoutingModule } from './service-type-routing.module';
 
 import { ServiceTypePage } from './service-type.page';
-import { FormatFileSizePipe } from 'src/providers/pipe/format-file-size.pipe';
-import { FormatFileSizePipe2 } from 'src/providers/pipe/format-file-size2.pipe';
+
+
+import { FormatFileSizeModule } from '../format-file-size/format-file-size.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ServiceTypePageRoutingModule
+    ServiceTypePageRoutingModule, FormatFileSizeModule
   ],
-  declarations: [ServiceTypePage,FormatFileSizePipe2]
+  declarations: [ServiceTypePage]
 })
 export class ServiceTypePageModule {}

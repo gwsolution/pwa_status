@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 
 import { environment } from 'src/environments/environment';
-import { Appliance } from '../pojo/appliance';
+import { Utility } from '../pojo/utility';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApplianceClientService {
+export class UtilityClientService {
 
   private getRequestOptions() {
     return { 'Accept': 'application/json', 'content-type': 'application/json', 'Authorization': environment.AUTHORIZATION,'Access-Control-Allow-Origin': '*','allow-running-insecure-content':'true' }
@@ -16,22 +16,22 @@ export class ApplianceClientService {
 
   constructor(public http: HttpClient) { }
 
-  public getAllAppliances(lang): Observable<Object> {
+  public getAllUtility(lang): Observable<Object> {
     console.log(lang)
     return this.http.get(environment.BASE_URL + environment.UTILITY_API+"?lang="+lang, { headers: this.getRequestOptions() });
   }
 
-  public deleteAppliance(id,lang): Observable<Object> {
+  public deleteUtility(id,lang): Observable<Object> {
     return this.http.delete(environment.BASE_URL + environment.UTILITY_API+"/"+id+"?lang="+lang, { headers: this.getRequestOptions() });
   }
 
-  public createNewAppliance(appliance: Appliance, lang): Observable<Object> {
+  public createNewUtility(utility: Utility, lang): Observable<Object> {
 
-    return this.http.post(environment.BASE_URL + environment.UTILITY_API+"?lang="+lang, appliance, { headers: this.getRequestOptions() });
+    return this.http.post(environment.BASE_URL + environment.UTILITY_API+"?lang="+lang, utility, { headers: this.getRequestOptions() });
   }
 
-  public updateAppliance(appliance: Appliance, lang): Observable<Object> {
+  public updateUtility(utility: Utility, lang): Observable<Object> {
 
-    return this.http.put(environment.BASE_URL + environment.UTILITY_API+"?lang="+lang, appliance, { headers: this.getRequestOptions() });
+    return this.http.put(environment.BASE_URL + environment.UTILITY_API+"?lang="+lang, utility, { headers: this.getRequestOptions() });
   }
 }

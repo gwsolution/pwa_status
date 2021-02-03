@@ -8,14 +8,15 @@ import { AppliancePageRoutingModule } from './appliance-routing.module';
 
 import { AppliancePage } from './appliance.page';
 import { FormatFileSizePipe } from 'src/providers/pipe/format-file-size.pipe';
+import { FormatFileSizeModule } from '../format-file-size/format-file-size.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AppliancePageRoutingModule
+    AppliancePageRoutingModule, FormatFileSizeModule
   ],
-  declarations: [AppliancePage,FormatFileSizePipe]
+  declarations: [AppliancePage]
 })
 export class AppliancePageModule {}

@@ -17,11 +17,11 @@ export class ServiceTypeClientService {
   constructor(public http: HttpClient) { }
 
   public getAllServiceTypeByAppliance(id,lang): Observable<Object> {
-    return this.http.get(environment.BASE_URL + environment.SERVICE_TYPE_API+"/"+environment.APPLIANCE_API+"/"+id+"?lang="+lang, { headers: this.getRequestOptions() });
+    return this.http.get(environment.BASE_URL + environment.SERVICE_TYPE_API+"/all/"+id+"?lang="+lang, { headers: this.getRequestOptions() });
   }
 
   public getAllServiceType(id,lang): Observable<Object> {
-    return this.http.get(environment.BASE_URL + environment.SERVICE_TYPE_API+"/all"+"/"+id+"?lang="+lang, { headers: this.getRequestOptions() });
+    return this.http.get(environment.BASE_URL + environment.SERVICE_TYPE_API+"/parent"+"/"+id+"?lang="+lang, { headers: this.getRequestOptions() });
   }
 
   public deleteServiceType(id,lang): Observable<Object> {

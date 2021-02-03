@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { UtilityPageRoutingModule } from './utility-routing.module';
+import { UtilityServiceTypePageRoutingModule } from './utility-service-type-routing.module';
 
-import { UtilityPage } from './utility.page';
+import { UtilityServiceTypePage } from './utility-service-type.page';
 import { FormatFileSizeModule } from '../format-file-size/format-file-size.module';
 
 @NgModule({
@@ -14,8 +14,8 @@ import { FormatFileSizeModule } from '../format-file-size/format-file-size.modul
     CommonModule,
     FormsModule,
     IonicModule,
-    UtilityPageRoutingModule, FormatFileSizeModule
+    UtilityServiceTypePageRoutingModule,FormatFileSizeModule
   ],
-  declarations: [UtilityPage]
+  declarations: [UtilityServiceTypePage]
 })
-export class UtilityPageModule {}
+export class UtilityServiceTypePageModule {}
