@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Appliance } from 'src/providers/pojo/appliance';
+import { ApplianceTree } from 'src/providers/pojo/appliance_tree';
 import { ApplianceClientService } from 'src/providers/server-util/appliance-client.service';
 import { commonUtil } from 'src/providers/util/commonUtil';
 
@@ -17,6 +19,7 @@ export class DataService {
    this.serverClient.getAppliancesTree(lang).subscribe(d => {
       this.appliances = this.util.getDataFromResponse(d)
       for(var a of this.appliances){
+        a = a as ApplianceTree;
         this.appliances_map.set(a.id,a.serviceType);
         this.getServiceType(a.serviceType);
       }
