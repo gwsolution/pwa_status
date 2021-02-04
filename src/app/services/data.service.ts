@@ -8,7 +8,7 @@ import { commonUtil } from 'src/providers/util/commonUtil';
   providedIn: 'root'
 })
 export class DataService {
-  appliances: Object[];
+  appliances: ApplianceTree[];
   appliances_map = new Map(); 
   service_type_map = new Map();
   selected_lang = 'eng';
@@ -19,7 +19,6 @@ export class DataService {
    this.serverClient.getAppliancesTree(lang).subscribe(d => {
       this.appliances = this.util.getDataFromResponse(d)
       for(var a of this.appliances){
-        a = a as ApplianceTree;
         this.appliances_map.set(a.id,a.serviceType);
         this.getServiceType(a.serviceType);
       }
@@ -33,7 +32,6 @@ export class DataService {
   getServiceType(serviceType) {
     if(serviceType)
     for(var a of serviceType){
-      a = a as ApplianceTree;
       this.service_type_map.set(a.id,a.serviceType);
       this.getServiceType(a.serviceType);
     }
