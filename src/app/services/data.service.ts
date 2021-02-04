@@ -33,6 +33,7 @@ export class DataService {
   getServiceType(serviceType) {
     if(serviceType)
     for(var a of serviceType){
+      a = a as ApplianceTree;
       this.service_type_map.set(a.id,a.serviceType);
       this.getServiceType(a.serviceType);
     }
