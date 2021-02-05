@@ -36,7 +36,7 @@
               <p>{{user.phone}}</p>
             </ion-col>
             <ion-col size-md="1" class="ion-align-self-center">
-              <ion-button>
+              <ion-button (click)="$event.stopPropagation();$event.preventDefault()">
                 <ion-icon slot="icon-only" name="create-outline"></ion-icon>
               </ion-button>
             </ion-col>
