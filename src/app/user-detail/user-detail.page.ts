@@ -25,6 +25,7 @@ export class UserDetailPage implements OnInit {
   getUserDetail() {
     this.server.getUserById(this.id).subscribe(d => {
       this.user = this.util.getDataFromResponse(d)
+      if(!this.user.status)this.getModeration(this.user.id)
     }, error => {
       console.log(error);
     });
