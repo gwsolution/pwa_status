@@ -48,6 +48,7 @@ export class AppliancePage implements OnInit {
   appliances: Object[];
   save_button_text: string = "Save Appliance";
 
+  isLoading = false
 
   constructor(
     private afStorage: AngularFireStorage,
@@ -220,10 +221,12 @@ export class AppliancePage implements OnInit {
   // }
 
   getAppliancesTree(ev?) {
+    this.isLoading = true;
     if (ev)
       this.dataService.selected_lang = ev.detail.value;
       var callback = (): void => {
         this.updateList();
+        this.isLoading = false;
       }
       this.dataService.updateAppliancesTree(this.dataService.selected_lang, callback);
 

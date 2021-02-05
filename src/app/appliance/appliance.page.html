@@ -12,6 +12,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-progress-bar *ngIf="isLoading" type="indeterminate"></ion-progress-bar>
   <ion-item>
     <ion-select slot="end" interface="popover" (ionChange)="getAppliancesTree($event)" [value]="this.dataService.selected_lang">
       <ion-select-option value="eng">English</ion-select-option>
@@ -87,6 +88,7 @@
   </div>
 
   <ion-list *ngIf="appliances">
+   
     <ion-item class="center" routerLink="/appliance/{{appliance.id}}" [state]="{data: appliance, lang: this.dataService.selected_lang, isMain: true, index: i}" *ngFor="let appliance of this.appliances; let i =index;">
 
       <ion-col size="12">
