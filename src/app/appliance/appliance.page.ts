@@ -153,6 +153,7 @@ export class AppliancePage implements OnInit {
 
 
   updateAppliance() {
+    this.isLoading = true;
     var appliance: Appliance = {
       "id": this.id,
       "name": this.name,
@@ -179,6 +180,7 @@ export class AppliancePage implements OnInit {
   }
 
   createNewAppliance() {
+    this.isLoading = true;
     var appliance: Appliance = {
       "name": this.name,
       "media": this.media,
@@ -257,6 +259,7 @@ export class AppliancePage implements OnInit {
   }
 
   async delete(appliance) {
+    this.isLoading = true;
     const alert = await this.alertController.create({
       header: "Confirm Delete?",
 
