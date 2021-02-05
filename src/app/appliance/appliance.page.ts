@@ -45,7 +45,6 @@ export class AppliancePage implements OnInit {
   file;
   result: string = "";
 
-
   appliances: Object[];
   save_button_text: string = "Save Appliance";
 
@@ -270,7 +269,11 @@ export class AppliancePage implements OnInit {
           text: 'OK',
           handler: () => {
             this.serverClient.deleteAppliance(appliance.id, this.dataService.selected_lang).subscribe(d => {
-              this.dataService.appliances.splice(this.dataService.appliances.indexOf(appliance), 1);
+              var callback = (): void => {
+                this.appliances.splice(this.appliances.indexOf(appliance), 1);
+              }
+              this.dataService.updateAppliancesTree(this.dataService.selected_lang, callback);
+              
             }, error => {
               console.log(error);
             });
