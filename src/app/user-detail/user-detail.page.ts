@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { serverClient } from 'src/providers/server-util/serverClient';
 import { commonUtil } from 'src/providers/util/commonUtil';
 import { AlertController } from '@ionic/angular';
+import { UserModeration } from 'src/providers/pojo/user-moderation';
+import { UserModerationClientService } from 'src/providers/server-util/user-moderation-client.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -13,7 +15,7 @@ export class UserDetailPage implements OnInit {
   id = null;
   isAlertDisabled: Boolean = false
   user;
-  constructor(private activatedRoute: ActivatedRoute, private server: serverClient, private util: commonUtil, private alertController: AlertController) { }
+  constructor(private activatedRoute: ActivatedRoute, private server: serverClient, private util: commonUtil, private alertController: AlertController, private userModerationClient: UserModerationClientService) { }
 
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
@@ -53,6 +55,7 @@ export class UserDetailPage implements OnInit {
           text: 'Ok',
           handler: (data) => {
             this.updateStatus(event,user);
+            this.addModeration(user.id, data)
             console.log('OK clicked. Data -> ' + JSON.stringify(data));
           }
         }
@@ -122,6 +125,7 @@ export class UserDetailPage implements OnInit {
             this.presentAlert(event,user)
             else{
               this.updateStatus(event,user);
+              this.addModeration(user.id, data)
             }
             console.log('OK clicked. Data -> ' + JSON.stringify(data));
             
@@ -195,5 +199,29 @@ export class UserDetailPage implements OnInit {
     this.deactivate(event,user)
 
    }
+
+   getModeration(id) {
+    this.userModerationClient.getModeration(this.id).subscribe(d => {
+    var  userModerationData= this.util.getDataFromResponse(d)
+    console.log(userModerationData)
+    }, error => {
+      console.log(error);
+    });
+
+  }
+
+  addModeration(id, reason) {
+    var userModeration: UserModeration = {
+      reason: reason,
+      userid: id
+    }
+    this.userModerationClient.addModeration(userModeration).subscribe(d => {
+      var userModeration = this.util.getDataFromResponse(d)
+      console.log(userModeration);
+    }, error => {
+      console.log(error);
+    });
+
+  }
 
    }
