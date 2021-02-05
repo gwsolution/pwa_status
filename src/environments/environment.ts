@@ -5,9 +5,10 @@
 export const environment = {
   production: false,
   BASE_URL:"https://api.planbell.com:8443/",
-  // BASE_URL:"https://localhost:8443/",
+//  BASE_URL:"https://localhost:8443/",
   USER_API:"user",
   APPLIANCE_API:"appliance",
+  USER_MODERATION_API:"moderation",
   UTILITY_API:"utility",
   TREE_API:"tree",
   SERVICE_TYPE_API:"service",
