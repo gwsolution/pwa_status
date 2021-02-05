@@ -1,9 +1,17 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title *ngIf="user">{{user.name}}</ion-title>
+    <ion-title *ngIf="user">{{user.name}} Details</ion-title>
+    <!-- <ion-title>User Details</ion-title> -->
   </ion-toolbar>
-</ion-header>
-
-<ion-content >
-  
+  <ion-content>
+  <ion-card>
+  <ion-row>
+  <ion-col *ngIf="user" size-md="1" class="ion-align-self-center">
+    <ion-toggle (click)="alert($event,user)" color="danger" [(ngModel)]="user.status">
+    </ion-toggle>
+  </ion-col>
+</ion-row>
+</ion-card>
 </ion-content>
+
+</ion-header>
