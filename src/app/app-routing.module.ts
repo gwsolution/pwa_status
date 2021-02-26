@@ -36,6 +36,13 @@ const routes: Routes = [
     path: 'utility/:id',
     loadChildren: () => import('./utility-service-type/utility-service-type.module').then( m => m.UtilityServiceTypePageModule)
   },
+  {
+    path: 'category',
+    loadChildren: () => import('./ad-category/ad-category.module').then( m => m.AdCategoryPageModule)
+  },{
+    path: 'category/:id',
+    loadChildren: () => import('./ad-category/ad-category.module').then( m => m.AdCategoryPageModule)
+  }
 ];
 
 @NgModule({

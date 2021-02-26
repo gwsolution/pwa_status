@@ -48,6 +48,10 @@ export class AppComponent {
         title : "Utility Service Management",
         url   : "/utility",
         icon  : "build-outline"
+      },{
+        title : "Ad Category Management",
+        url   : "/category",
+        icon  : "build-outline"
       }
     ]
   }

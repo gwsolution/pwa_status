@@ -8,6 +8,7 @@ export const environment = {
 //  BASE_URL:"https://localhost:8443/",
   USER_API:"user",
   APPLIANCE_API:"appliance",
+  CATEGORY_API:"ad-category",
   USER_MODERATION_API:"moderation",
   UTILITY_API:"utility",
   TREE_API:"tree",
