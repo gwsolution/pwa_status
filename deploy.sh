@@ -1,2 +1,2 @@
 ionic build
-firebase deploy
+firebase deploy --only hosting:oxystatus

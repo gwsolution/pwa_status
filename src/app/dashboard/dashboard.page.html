@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+  
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="statusList" class="margin-auto">
+    <ion-row justify-content-center>
+      <ion-col col-auto class="cell-header-class ion-text-center"><span>Location</span></ion-col>
+      <ion-col col-auto class="cell-header-class ion-text-center"><span>Status</span></ion-col>
+      <ion-col col-auto class="cell-header-class ion-text-center"><span>Comment</span></ion-col>
+      <ion-col col-auto class="cell-header-class ion-text-center"><span>Contact</span></ion-col>
+      <ion-col col-auto class="cell-header-class ion-text-center"><span>Last Updated at</span></ion-col>
+    </ion-row>
+
+
+          <ion-row *ngFor="let status of statusList" justify-content-center>
+            <ion-col col-auto class="cell-class ion-text-center"><span>{{status.location}}</span></ion-col>
+            <ion-col col-auto class="cell-class ion-text-center"><span>{{status.status}}</span></ion-col>
+            <ion-col col-auto class="cell-class ion-text-center"><span>{{status.comment}}</span></ion-col>
+            <ion-col col-auto class="cell-class ion-text-center"><span>{{status.contact}}</span></ion-col>
+            <ion-col col-auto class="cell-class ion-text-center"><span>{{status.updatedAt}}</span></ion-col>
+          </ion-row>
+
+
+  </ion-list>
+</ion-content>

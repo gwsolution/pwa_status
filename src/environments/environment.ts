@@ -11,6 +11,7 @@ export const environment = {
   CATEGORY_API:"ad-category",
   USER_MODERATION_API:"moderation",
   UTILITY_API:"utility",
+  STATUS_API:"status",
   TREE_API:"tree",
   SERVICE_TYPE_API:"service",
   UTILITY_SERVICE_TYPE_API:"utility/service",

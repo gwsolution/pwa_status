@@ -14,7 +14,7 @@ export class AppComponent {
   constructor(
     private platform: Platform, private statusBar: StatusBar
   ) {
-    this.sideMenu();
+  
     this.initializeApp();
   }
 
@@ -24,35 +24,5 @@ export class AppComponent {
    
       // this.splashScreen.hide();
     });
-  }
-
-  sideMenu()
-  {
-    this.navigate =
-    [
-      {
-        title : "Home",
-        url   : "/home",
-        icon  : "home"
-      },
-      {
-        title : "User Management",
-        url   : "/user",
-        icon  : "person-circle-outline"
-      },
-      {
-        title : "Appiance Management",
-        url   : "/appliance",
-        icon  : "rocket-outline"
-      },{
-        title : "Utility Service Management",
-        url   : "/utility",
-        icon  : "build-outline"
-      },{
-        title : "Ad Category Management",
-        url   : "/category",
-        icon  : "build-outline"
-      }
-    ]
   }
 }
