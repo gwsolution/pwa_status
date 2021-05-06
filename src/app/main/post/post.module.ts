@@ -11,8 +11,8 @@ import { PostPage } from './post.page';
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
     IonicModule,
+    FormsModule,
     PostPageRoutingModule
   ],
   declarations: [PostPage]

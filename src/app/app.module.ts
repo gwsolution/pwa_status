@@ -19,6 +19,8 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 
 import { environment } from '../environments/environment'
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
+
 
 
 @NgModule({
@@ -33,6 +35,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
     serverClient,
     commonUtil,
     Geolocation,
+    NativeGeocoder,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

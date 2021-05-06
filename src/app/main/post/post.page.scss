@@ -1,0 +1,35 @@
+.free{
+  color: yellow;
+     --background: red;
+}
+
+.paid{
+  color: whitesmoke;
+     --background: grey;
+}
+
+.label_margin{
+   margin: 15px;
+   padding: 5px;
+   border-color: whitesmoke; 
+   border-width: .001em; 
+   border-style:solid;
+}
+
+ion-col.my-thin-col {
+    flex: 0 0 4px;
+    padding:0;
+    margin-right:10px;
+  }
+
+  .error_text{
+    color: red;
+    font-size: 10px;
+  }
+
+  .usage-stats{
+    color: grey;
+    font-size: small;
+    text-align-last: right;
+
+  }
