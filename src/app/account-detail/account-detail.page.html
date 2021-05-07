@@ -1,0 +1,123 @@
+<ion-header>
+  <ion-toolbar class="new-background-color">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-col size="12">
+      <ion-title class="ion-text-start">User Detail</ion-title>
+    </ion-col>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="container">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <div class="ion-text-center">
+          <ion-item class="label_margin" id="name_parent">
+            <ion-label position="stacked">Name*</ion-label>
+            <ion-input type="text" id="name" clearInput placeholder="Please enter your name here" [(ngModel)]="name"
+              (ionChange)="onTextChange('name')">
+            </ion-input>
+          </ion-item>
+          <p *ngIf="isNameError" class="error_text" padding>{{nameError}}</p>
+
+
+          <ion-row class="ion-align-items-center">
+            <ion-col size="10">
+              <ion-item class="label_margin" id="pincode_parent">
+                <ion-label position="stacked">Pincode*</ion-label>
+                <ion-input type="number" id="pincode" clearInput placeholder="Please enter your pincode here"
+                  [(ngModel)]="pincode" (ionChange)="onTextChange('pincode', $event.target.value)">
+                </ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="1">
+              <ion-button color="light" (click)="current_location()">
+                <ion-icon slot="icon-only" name="locate-outline"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <p *ngIf="locationText" class="location_text" padding>{{locationText}}</p>
+          <p *ngIf="isPincodeError" class="error_text" padding>{{pincodeError}}</p>
+
+          <ion-item class="label_margin" id="address_parent">
+            <ion-label position="stacked">Address</ion-label>
+            <ion-textarea type="text" id="address" clearInput placeholder="Please enter your address here"
+              [(ngModel)]="address" (ionChange)="onTextChange('address')">
+            </ion-textarea>
+          </ion-item>
+          <p *ngIf="isAddressError" class="error_text" padding>{{addressError}}</p>
+
+          <ion-item class="label_margin" id="email_parent">
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input type="email" id="email" clearInput placeholder="Please enter your email here" [(ngModel)]="email"
+              (ionChange)="onTextChange('email')">
+            </ion-input>
+          </ion-item>
+
+
+
+          <ion-item *ngFor="let contact of contacts;let i = index trackBy:trackByFn" class="label_margin"
+            id="contact_parent">
+            <ion-label position="stacked">Contact Number</ion-label>
+            <ion-input type="number" clearInput placeholder="Please enter your phone number here" id="contacts{{i}}"
+              [(ngModel)]="contacts[i]">
+            </ion-input>
+          </ion-item>
+
+
+          <div *ngFor="let item of items ; let i = index trackBy:trackByFn">
+            <ion-row>
+              <ion-col size="10">
+                <ion-item>
+                  <!-- <ion-input type="number" clearInput placeholder="Please enter your phone number here" id="option{{i}}"
+                    [(ngModel)]="items[i]">
+                  </ion-input> -->
+                  <ion-label type="number"  id="option{{i}}">{{items[i]}}</ion-label>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size="2" class="ion-align-self-end">
+                <ion-button color="light" size="small" icon-only (click)="deleteOption(item)">
+                  <ion-icon slot="icon-only" name="close"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </div>
+
+          <ion-item class="rounded" id="option">
+            <ion-label position="stacked">Contact Number</ion-label>
+            <ion-textarea rows="1" maxlength="50" id="messageInputBox" placeholder="Please enter your phone number here"
+              [(ngModel)]="option" (keyup.enter)="add_contact()" required></ion-textarea>
+          </ion-item>
+          <ion-row class="ion-align-self-end">
+            <ion-col size="12">
+          <ion-item>
+            <ion-button expand="full" slot="end" color="light" (click)="add_contact()">Add Contact
+              <ion-icon  name="add-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+          </ion-col></ion-row>
+
+
+          <ion-row class="ion-align-self-end">
+            <ion-col size="12">
+              <ion-button color="secondary" expand="full" (click)="submit()">
+                {{save_button_text}}
+              </ion-button>
+            </ion-col>
+
+            <ion-col size="12">
+              <ion-label color="danger">
+                {{result}}
+              </ion-label>
+            </ion-col>
+          </ion-row>
+
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+
+</ion-content>

@@ -1,0 +1,9 @@
+<ion-content class="main-view">
+  <div class="overlay" (click)="dismiss()"></div>
+  <div class="modal_content" scrollY="true">
+    <ion-input [(ngModel)]="verifCode" type="tel">
+    </ion-input>
+    <ion-button (click)="verifyCode()">Verify Code</ion-button>
+  </div>
+  <div id="recaptcha-container"></div>
+</ion-content>

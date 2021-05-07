@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { commonUtil } from 'src/providers/util/commonUtil';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Status } from 'src/providers/pojo/status';
 import { DashboardClientService } from 'src/providers/server-util/dashboard-client.service';
@@ -22,11 +22,17 @@ export class DashboardPage implements OnInit {
 
   statusList: Status[];
 
+  item
+
   constructor(
+    private route: ActivatedRoute,
     private serverClient: DashboardClientService,
     private util: commonUtil, public router: Router
   ) {
-
+    if (this.router.getCurrentNavigation()) {
+      this.item = this.router.getCurrentNavigation().extras.state.data;
+   console.log(this.item)
+    }
   }
   ngOnInit(): void {
     this.getAllDashboard();

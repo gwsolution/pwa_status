@@ -1,9 +1,9 @@
 import { Component, enableProdMode } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import firebase from "@firebase/app";
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { MenuController } from '@ionic/angular';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -14,7 +14,7 @@ export class AppComponent {
   constructor(
     private platform: Platform, private statusBar: StatusBar
   ) {
-  
+    firebase.initializeApp(environment.firebaseConfig);
     this.initializeApp();
   }
 

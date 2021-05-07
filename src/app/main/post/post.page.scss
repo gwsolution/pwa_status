@@ -8,12 +8,11 @@
      --background: grey;
 }
 
-.label_margin{
-   margin: 15px;
-   padding: 5px;
-   border-color: whitesmoke; 
-   border-width: .001em; 
-   border-style:solid;
+
+
+div.label_margin{
+  color: #cc5500;
+  font-size: 15px;
 }
 
 ion-col.my-thin-col {
@@ -22,10 +21,7 @@ ion-col.my-thin-col {
     margin-right:10px;
   }
 
-  .error_text{
-    color: red;
-    font-size: 10px;
-  }
+
 
   .usage-stats{
     color: grey;

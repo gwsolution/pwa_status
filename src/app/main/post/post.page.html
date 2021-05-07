@@ -6,197 +6,184 @@
 
 <ion-content>
   <div id="container">
-
-    <div class="ion-text-center" *ngIf="!isUploading && !isUploaded">
-
-
-      <ion-item class="label_margin">
-        <ion-label position="stacked">Title*</ion-label>
-        <ion-textarea maxlength={{charsAllowedTitle}} id="title" clearInput placeholder="please enter service or kitchen name here"
-          [(ngModel)]="name" (ionChange)="onTextChange('title')"></ion-textarea>
-        <div class="usage-stats">
-          {{charsUsedTitle}} / {{charsAllowedTitle}}
-        </div>
-      </ion-item>
-      <p *ngIf="isTitleError" class="error_text" padding>{{titleError}}</p>
-
-      <ion-item class="label_margin">
-        <ion-label position="stacked">Description</ion-label>
-        <ion-textarea maxlength={{charsAllowedDescription}} id="description" (ionChange)="onTextChange('description')"  clearInput
-          placeholder="please enter description(menu, timings etc.) here" [(ngModel)]="description"></ion-textarea>
-        <div class="usage-stats">
-          {{charsUsedDescription}} / {{charsAllowedDescription}}
-        </div>
-      </ion-item>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <div class="ion-text-center">
 
 
-      <ion-item-divider></ion-item-divider>
+          <ion-item class="label_margin" id="title_parent">
+            <ion-label position="stacked">Title*</ion-label>
+            <ion-textarea maxlength={{charsAllowedTitle}} id="title" clearInput
+              placeholder="please enter service or kitchen name here" [(ngModel)]="tnad.name"
+              (ionChange)="onTextChange('title')"></ion-textarea>
+            <div class="usage-stats">
+              {{charsUsedTitle}} / {{charsAllowedTitle}}
+            </div>
+          </ion-item>
+          <p *ngIf="isTitleError" class="error_text" padding>{{titleError}}</p>
 
-      <ion-row class="label_margin">
-        <ion-col size="6">
-          <ion-button [class.free]="isFree === true" [class.paid]="isFree === false" #free expand="block"
-            (click)="setFree(true);">Free
-          </ion-button>
-        </ion-col>
-        <ion-col size="6">
-          <ion-button [class.free]="isFree === false" [class.paid]="isFree === true" #paid expand="block"
-            (click)="setFree(false);">Paid
-          </ion-button>
-        </ion-col>
-      </ion-row>
-
-
-      <ion-item *ngIf="!isFree" class="label_margin">
-        <ion-label position="stacked">Cost per plate for tiffin service(₹)</ion-label>
-        <ion-input type="number" clearInput placeholder="" [(ngModel)]="cost" (ionChange)="onTextChange('cost')">
-        </ion-input>
-      </ion-item>
-      <p *ngIf="isCostError" class="error_text" padding>{{costError}}</p>
-
-
-      <ion-item-divider></ion-item-divider>
-
-      <div class="label_margin">Delivery Mode
-        <ion-item>
-          <ion-label>Takeaway</ion-label>
-          <ion-checkbox slot="end" [(ngModel)]="isTakeaway"></ion-checkbox>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Home Delivery</ion-label>
-          <ion-checkbox slot="end" [(ngModel)]="isHomeDelivery"></ion-checkbox>
-        </ion-item>
-      </div>
+          <ion-item class="label_margin">
+            <ion-label position="stacked">Description</ion-label>
+            <ion-textarea maxlength={{charsAllowedDescription}} id="description"
+              (ionChange)="onTextChange('description')" clearInput
+              placeholder="please enter description(menu, timings etc.) here" [(ngModel)]="tnad.description">
+            </ion-textarea>
+            <div class="usage-stats">
+              {{charsUsedDescription}} / {{charsAllowedDescription}}
+            </div>
+          </ion-item>
 
 
-      <ion-item-divider></ion-item-divider>
+          <ion-item-divider></ion-item-divider>
 
-      <div class="label_margin">Meal Type
-        <ion-row>
-          <ion-col size="4">
-            <ion-button [class.free]="mealType === 0" [class.paid]="mealType != 0" expand="block"
-              (click)="setMealType(0);">Veg</ion-button>
-          </ion-col>
-          <ion-col size="4">
-            <ion-button [class.free]="mealType === 1" [class.paid]="mealType != 1" expand="block"
-              (click)="setMealType(1);">Non veg</ion-button>
-          </ion-col>
-          <ion-col size="4">
-            <ion-button [class.free]="mealType === 2" [class.paid]="mealType != 2" expand="block"
-              (click)="setMealType(2);">Both</ion-button>
-          </ion-col>
-        </ion-row>
-      </div>
+          <div class="label_margin"> Service type
+            <ion-row>
+              <ion-col size="6">
+                <ion-button [class.free]="tnad.isFree === true" [class.paid]="tnad.isFree === false" #free
+                  expand="block" (click)="setFree(true);">Free
+                </ion-button>
+              </ion-col>
+              <ion-col size="6">
+                <ion-button [class.free]="tnad.isFree === false" [class.paid]="tnad.isFree === true" #paid
+                  expand="block" (click)="setFree(false);">Paid
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </div>
 
-
-      <ion-item-divider></ion-item-divider>
-
-      <div class="label_margin">Please select Meals to be served*
-
-        <ion-item>
-          <ion-label>Breakfast</ion-label>
-          <ion-checkbox slot="end" [(ngModel)]="isBreakfast"></ion-checkbox>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Lunch</ion-label>
-          <ion-checkbox slot="end" [(ngModel)]="isLunch"></ion-checkbox>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Dinner</ion-label>
-          <ion-checkbox slot="end" [(ngModel)]="isDinner"></ion-checkbox>
-        </ion-item>
-      </div>
+          <ion-item *ngIf="!tnad.isFree" class="label_margin" id="cost_parent">
+            <ion-label position="stacked">Cost per plate for tiffin service(₹)</ion-label>
+            <ion-input type="number" id="cost" clearInput placeholder="" [(ngModel)]="tnad.cost"
+              (ionChange)="onTextChange('cost')">
+            </ion-input>
+          </ion-item>
+          <p *ngIf="isCostError" class="error_text" padding>{{costError}}</p>
 
 
-      <ion-item-divider></ion-item-divider>
+          <ion-item-divider></ion-item-divider>
+
+          <div class="label_margin" id="delivery_parent">Delivery Mode
+            <ion-item>
+              <ion-label>Takeaway</ion-label>
+              <ion-checkbox slot="end" [(ngModel)]="tnad.isTakeaway"></ion-checkbox>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Home Delivery</ion-label>
+              <ion-checkbox slot="end" [(ngModel)]="tnad.isHomeDelivery"></ion-checkbox>
+            </ion-item>
+          </div>
+          <p *ngIf="isDeliveryModeError" class="error_text" padding>{{deliveryModeError}}</p>
 
 
-      <ion-row class="label_margin">
+          <ion-item-divider></ion-item-divider>
+
+          <div class="label_margin" id="meal_parent">Meal Type
+            <ion-row>
+              <ion-col size="4">
+                <ion-button [class.free]="tnad.mealType === 0" [class.paid]="tnad.mealType != 0" expand="block"
+                  (click)="setMealType(0);">Veg</ion-button>
+              </ion-col>
+              <ion-col size="4">
+                <ion-button [class.free]="tnad.mealType === 1" [class.paid]="tnad.mealType != 1" expand="block"
+                  (click)="setMealType(1);">Non veg</ion-button>
+              </ion-col>
+              <ion-col size="4">
+                <ion-button [class.free]="tnad.mealType === 2" [class.paid]="tnad.mealType != 2" expand="block"
+                  (click)="setMealType(2);">Both</ion-button>
+              </ion-col>
+            </ion-row>
+          </div>
 
 
-        <ion-col size=12>
-          <ion-range min="0" max="100" step="2" snaps="true" pin="true" color="secondary" [(ngModel)]="distance">
-          </ion-range>
-        </ion-col>
-        <ion-col size=12>
-          <p>Maximum distance served - {{distance}} KM</p>
-        </ion-col>
-      </ion-row>
+          <ion-item-divider></ion-item-divider>
+
+          <div id="meal" class="label_margin">Please select Meals to be served*
+
+            <ion-item>
+              <ion-label>Breakfast</ion-label>
+              <ion-checkbox slot="end" [(ngModel)]="tnad.isBreakfast"></ion-checkbox>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Lunch</ion-label>
+              <ion-checkbox slot="end" [(ngModel)]="tnad.isLunch"></ion-checkbox>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Dinner</ion-label>
+              <ion-checkbox slot="end" [(ngModel)]="tnad.isDinner"></ion-checkbox>
+            </ion-item>
+          </div>
+          <p *ngIf="isMealError" class="error_text" padding>{{mealError}}</p>
 
 
-      <ion-item-divider></ion-item-divider>
+          <ion-item-divider></ion-item-divider>
 
-      <ion-row class="ion-padding ion-align-items-center">
-        <ion-col size="12">Attach Image(s) to upload</ion-col>
-        <ion-col *ngIf="media" size="12">
-          <ion-thumbnail>
-            <img src="{{media}}">
-          </ion-thumbnail>
-        </ion-col>
-        <ion-col size="12">
-          <ion-button color="primary">
-            <input id="myFile" type="file" (change)="selectImage($event.target.files)" multiple>
-          </ion-button>
-        </ion-col>
-        <ion-reorder-group (ionItemReorder)="reorderItems($event)" disabled="false">
-          <ion-item *ngFor="let image of images; let i=index">
-            <ion-col size="8" class="ion-align-self-center">
-              <ion-card>
-                <img [src]="_DomSanitizationService.bypassSecurityTrustUrl(image)">
-              </ion-card>
+
+          <ion-row class="label_margin">
+
+
+            <ion-col size=12>
+              <ion-range min="1" max="30" step="1" snaps="true" pin="true" color="secondary"
+                [(ngModel)]="tnad.distance">
+              </ion-range>
             </ion-col>
-            <ion-col size="2">
-              <ion-button color="medium" (click)="removeImage(i)">
-                <ion-icon name="close-outline"></ion-icon>
+            <ion-col size=12>
+              <p>Maximum distance served - {{tnad.distance}} KM</p>
+            </ion-col>
+          </ion-row>
+
+
+          <ion-item-divider></ion-item-divider>
+
+          <ion-row class="ion-padding ion-align-items-center">
+            <ion-col size="12">Attach Image(s) to upload</ion-col>
+            <ion-col size="12">
+              <ion-button color="primary">
+                <input id="myFile" type="file" (change)="selectImage($event.target.files)" multiple>
+              </ion-button>
+            </ion-col>
+            <ion-reorder-group *ngIf="tnad.images" (ionItemReorder)="reorderItems($event)" disabled="false">
+              <ion-item *ngFor="let image of tnad.images; let i=index">
+                <ion-col size="8" class="ion-align-self-center">
+                  <ion-card>
+                    <ion-thumbnail><img [src]="_DomSanitizationService.bypassSecurityTrustUrl(image)"></ion-thumbnail>
+                  </ion-card>
+                </ion-col>
+                <ion-col size="2">
+                  <ion-button color="medium" (click)="removeImage(i)">
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-button>
+                </ion-col>
+                <ion-reorder slot="end">
+                </ion-reorder>
+              </ion-item>
+
+            </ion-reorder-group>
+
+          </ion-row>
+
+
+          <ion-row class="ion-align-self-end">
+            <ion-col size="12">
+              <ion-button color="secondary" expand="full" (click)="submit()">
+                {{save_button_text}}
               </ion-button>
             </ion-col>
 
 
 
-            <ion-reorder slot="end">
-            </ion-reorder>
-          </ion-item>
-
-        </ion-reorder-group>
-        <ion-col size="12" *ngIf="isImageUpload">
-          <div *ngIf="percentageVal | async as percentage">
-            Progress: {{ percentage | number }}%
-            <ion-progress-bar value="{{ percentage / 100 }}"></ion-progress-bar>
-          </div>
-        </ion-col>
-        <ion-col size="12" *ngIf="isImageUpload">
-          <div *ngIf="trackSnapshot | async as snap">
-            File size: {{ snap.totalBytes | formatFileSize }}
-            <span *ngIf="snap.bytesTransferred">
-              Data transfered: {{ snap.bytesTransferred | formatFileSize }}
-            </span>
-          </div>
-        </ion-col>
+            <ion-col size="12">
+              <ion-label color="danger">
+                {{result}}
+              </ion-label>
+            </ion-col>
+          </ion-row>
 
 
-      </ion-row>
-
-
-      <ion-row class="ion-align-self-end">
-        <ion-col size="12">
-          <ion-button color="secondary" expand="full" (click)="submit()">
-            {{save_button_text}}
-          </ion-button>
-        </ion-col>
-
-
-
-        <ion-col size="12">
-          <ion-label color="danger">
-            {{result}}
-          </ion-label>
-        </ion-col>
-      </ion-row>
-
-
-    </div>
-
+        </div>
+      </ion-col>
+    </ion-row>
   </div>
 </ion-content>

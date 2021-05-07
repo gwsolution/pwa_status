@@ -1,11 +1,17 @@
 {
   "hosting": {
-    "site":"oxystatus",
     "public": "www",
+    "site":"oxystatus",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }

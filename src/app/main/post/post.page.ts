@@ -1,16 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import { Observable } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
-import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
-import { ApplianceClientService } from 'src/providers/server-util/appliance-client.service';
-import { Appliance } from 'src/providers/pojo/appliance';
-import { commonUtil } from 'src/providers/util/commonUtil';
-import { AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { DataService } from 'src/app/services/data.service';
+
+import { NavigationExtras, Router } from '@angular/router';
+
 import { DomSanitizer } from '@angular/platform-browser';
 import { ToastController } from '@ionic/angular';
+import { TnAd } from 'src/providers/pojo/tn-ad';
+
 
 export interface imgFile {
   name: string;
@@ -27,77 +23,66 @@ export interface imgFile {
 })
 
 export class PostPage implements OnInit {
-  @ViewChild('free') freeButton: ElementRef;
-  @ViewChild('paid') paidButton: ElementRef;
-
   charsAllowedTitle = 100;
   charsUsedTitle = 0;
   charsAllowedDescription = 4000;
   charsUsedDescription = 0;
-  fileUploadTask: AngularFireUploadTask;
-  percentageVal: Observable<number>;
-  trackSnapshot: Observable<any>;
-  UploadedImageURL: Observable<string>;
-  files: Observable<imgFile[]>;
-  imgName: string;
-  imgSize: number;
-  isFileUploading: boolean;
-  isFileUploaded: boolean;
-  isImageUpload: boolean;
-  isValidForm: boolean = false;
-  isTitleError = false;
-  isCostError= false;
 
-  isFree: boolean;
-  mealType: number;
+  isTitleError = false;
+  isCostError = false;
+  isMealError = false;
+  isDeliveryModeError = false;
+
+  private tnad: TnAd;
 
   isUpdateMode: boolean;
   isEnabled: boolean;
-  id: number;
-  name: string;
-  description: string;
-  media: string;
-  cost: number;
 
-  file;
-  result: string = "";
 
-  appliances: Object[];
   save_button_text: string = "Continue";
 
-  titleError= "Title is Mandatory. Minimum length should be 5.";
-  costError= "Please enter a valid cost.";
+  titleError = "Title is Mandatory. Minimum length should be 5.";
+  costError = "Please enter a valid cost.";
+  mealError = "Please select atleast one meal to be served.";
+  deliveryModeError = "Please select atleast one delivery mode.";
 
-  isLoading = false
-  isTakeaway;
-  isHomeDelivery;
-  isBreakfast;
-  isLunch;
-  isDinner;
-  distance = 5;
-  images = new Array();
 
   constructor(
     public toastController: ToastController,
-    public _DomSanitizationService: DomSanitizer,
-    private afStorage: AngularFireStorage,
-    private serverClient: ApplianceClientService,
-    private util: commonUtil, private alertController: AlertController, public router: Router, private dataService: DataService
+    public _DomSanitizationService: DomSanitizer, public router: Router
   ) {
-    this.isFileUploading = false;
-    this.isFileUploaded = false;
-
 
 
   }
 
   ngOnInit() {
+    this.initAd();
     this.setFree(true);
     this.setMealType(0);
   }
+  initAd() {
+    this.tnad = {
+      id: 0,
+      name: "wdcwdcwcwc",
+      description: "",
+      cost: null,
+      isLoading: false,
+      isTakeaway: true,
+      isHomeDelivery: false,
+      isBreakfast: true,
+      isLunch: false,
+      isDinner: false,
+      distance: 5,
+      isFree: false,
+      mealType: 0,
+      media: [],
+      images: new Array()
+    };
+  }
   setFree(free) {
-    this.isFree = free;
+    this.tnad.isFree = free;
 
+    this.isCostError = false;
   }
 
   async presentToast(text) {
@@ -125,67 +110,62 @@ export class PostPage implements OnInit {
   }
 
   reorderItems(ev) {
-    const itemMove = this.images.splice(ev.detail.from, 1)[0];
-    this.images.splice(ev.detail.to, 0, itemMove);
+    const itemMove = this.tnad.images.splice(ev.detail.from, 1)[0];
+    this.tnad.images.splice(ev.detail.to, 0, itemMove);
     ev.detail.complete();
   }
 
   checktitle() {
-    if (!this.name || this.name.length < 5) {
+    if (!this.tnad.name || this.tnad.name.length < 5) {
       this.isTitleError = true;
       return false;
     } else
       this.isTitleError = false;
-      return true;
+    return true;
   }
 
-  onTextChange(input){
-    switch(input){
+  onTextChange(input) {
+    switch (input) {
       case 'title':
-        if(this.name)
-        this.charsUsedTitle = this.name.length;
+        if (this.tnad.name)
+          this.charsUsedTitle = this.tnad.name.length;
         else this.charsUsedTitle = 0;
 
-        if(this.isTitleError){
+        if (this.isTitleError) {
           this.checktitle();
         }
         this.change('title');
         break;
-        case 'cost':
-          if(this.cost){
-            this.isCostError=false;
-          }
-          break;
-          case 'description':
-            if(this.description)
-            this.charsUsedDescription = this.description.length;
-            else this.charsUsedDescription = 0;
-            this.change('description');
-          break;
+      case 'cost':
+        if (this.tnad.cost) {
+          this.isCostError = false;
+        }
+        break;
+      case 'description':
+        if (this.tnad.description)
+          this.charsUsedDescription = this.tnad.description.length;
+        else this.charsUsedDescription = 0;
+        this.change('description');
+        break;
     }
   }
 
 
 
   setMealType(mMealType) {
-    this.mealType = mMealType;
+    this.tnad.mealType = mMealType;
 
   }
 
   removeImage(i) {
-
     if (i > -1) {
-      this.images.splice(i, 1);
+      this.tnad.images.splice(i, 1);
+      this.tnad.media.splice(i, 1);
     }
-
   }
 
-
-
   selectImage(event: FileList) {
-    this.file = event.item(0)
-    this.result = ""
-
+    this.tnad.media = Array.from(event)
 
     for (let i = 0; i < event.length; i++) {
       const reader = new FileReader();
@@ -196,196 +176,61 @@ export class PostPage implements OnInit {
       }
       reader.readAsDataURL(event.item(i));
       reader.onload = (_event) => {
-        this.images.push(reader.result);
+        this.tnad.images.push(reader.result);
       }
-
     }
-
-
   }
 
   enableAdd() {
     this.isEnabled = true;
   }
   async submit() {
-    // if (this.isUpdateMode) {
-    //   if (!this.file && !this.media) {
-    //     this.result = "Appliance image is not selected"
-    //     return
-    //   }
-    // }
-    // else {
-    //   if (!this.file) {
-    //     this.result = "Appliance image is not selected"
-    //     return
-    //   }
-    // }
-    if (!this.name || !this.checktitle()) {
-      this.presentToast(this.titleError);
-       return
-     }
 
-    if(!this.isFree){
-      if (!this.cost) {
-        this.isCostError = true;
-        this.presentToast(this.costError);
-         return
-       }
+    if (!this.tnad.name || !this.checktitle()) {
+      document.getElementById('title_parent').scrollIntoView(true);
+      this.isTitleError = true;
+
+      this.presentToast(this.titleError);
+      return
     }
 
-
-  
-    this.isImageUpload = true
-    this.result = ""
-    if (this.file) {
-      if (this.file.type.split('/')[0] !== 'image') {
-        console.log('File type is not supported!')
-        return;
+    if (!this.tnad.isFree) {
+      if (!this.tnad.cost) {
+        this.isCostError = true;
+        document.getElementById('cost_parent').scrollIntoView(true);
+        this.presentToast(this.costError);
+        return
       }
+    }
 
-      this.isFileUploading = true;
-      this.isFileUploaded = false;
-      this.imgName = this.file.name;
-      const fileStoragePath = `appliance/${new Date().getTime()}_${this.file.name}`;
-      const imageRef = this.afStorage.ref(fileStoragePath);
-      this.fileUploadTask = this.afStorage.upload(fileStoragePath, this.file);
-      this.percentageVal = this.fileUploadTask.percentageChanges();
-      this.trackSnapshot = this.fileUploadTask.snapshotChanges().pipe(
+    if (!this.tnad.isTakeaway && !this.tnad.isHomeDelivery) {
+      this.isDeliveryModeError = true;
+      document.getElementById('delivery_parent').scrollIntoView(true);
+      this.presentToast(this.deliveryModeError);
+      return
+    } else {
+      this.isDeliveryModeError = false;
+    }
 
-        finalize(() => {
-          this.UploadedImageURL = imageRef.getDownloadURL();
+    if (!this.tnad.isBreakfast && !this.tnad.isLunch && !this.tnad.isDinner) {
+      this.isMealError = true;
+      document.getElementById('meal_parent').scrollIntoView(true);
+      this.presentToast(this.mealError);
+      return
+    } else {
+      this.isMealError = false;
+    }
+    let navigationExtras: NavigationExtras = { state: { data: this.tnad } };
+    this.router.navigate(['account-detail'],navigationExtras)
 
-          this.UploadedImageURL.subscribe(resp => {
-
-            this.media = resp;
-            this.isFileUploading = false;
-            this.isFileUploaded = true;
-
-            // if (this.isUpdateMode) this.updateAppliance();
-            // else this.createNewAppliance();
-          }, error => {
-            console.log(error);
-          })
-        }),
-        tap(snap => {
-          this.imgSize = snap.totalBytes;
-        })
-      )
-    } 
-    // else {
-    //   if (this.isUpdateMode) this.updateAppliance();
-    // }
-  }
-
-  // updateAppliance() {
-  //   this.isLoading = true;
-  //   var appliance: Appliance = {
-  //     "id": this.id,
-  //     "name": this.name,
-  //     "media": this.media,
-  //     "description": this.description,
-  //     "displayOrder": this.order
-  //   }
-
-  //   var callback = (): void => {
-  //     this.updateList();
-  //   }
-
-  //   this.serverClient.updateAppliance(appliance, this.dataService.selected_lang).subscribe(d => {
-  //     this.clearFields();
-  //     this.dataService.updateAppliancesTree(this.dataService.selected_lang, callback);
-  //   }, error => {
-  //     console.log(error);
-  //     this.result = error.error.message;
-  //   });
-  // }
-
-
-
-  // createNewAppliance() {
-  //   this.isLoading = true;
-  //   var appliance: Appliance = {
-  //     "name": this.name,
-  //     "media": this.media,
-  //     "description": this.description,
-  //     "displayOrder": this.order
-  //   }
-  //   var callback = (): void => {
-  //     this.updateList();
-  //   }
-
-  //   this.serverClient.createNewAppliance(appliance, 'eng').subscribe(d => {
-  //     this.clearFields();
-  //     this.dataService.updateAppliancesTree(this.dataService.selected_lang, callback);
-  //   }, error => {
-  //     console.log(error);
-  //   });
-  // }
-  clearFields() {
-    this.name = null;
-    this.description = null;
-    this.file = null;
-    this.isImageUpload = false
-    this.id = 0;
-    this.media = null;
-
-    this.isEnabled = false;
-
-    this.isUpdateMode = false
-    this.save_button_text = "Save Appliance";
   }
 
 
-
-  cancel() {
-    this.clearFields();
+  update(ad: TnAd) {
+    this.tnad = ad;
+    this.save_button_text = "Update";
   }
 
-  // update(appliance: Appliance) {
-  //   console.log(appliance.media);
-  //   this.isEnabled = true;
 
-  //   this.id = appliance.id;
-  //   this.media = appliance.media;
-  //   this.name = appliance.name;
-  //   this.order = appliance.displayOrder;
-  //   this.description = appliance.description
-  //   this.isUpdateMode = true;
-  //   this.result = ""
-  //   this.save_button_text = "Update Appliance";
-  // }
-
-  async delete(appliance) {
-    this.isLoading = true;
-    const alert = await this.alertController.create({
-      header: "Confirm Delete?",
-
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
-
-          }
-        }, {
-          text: 'OK',
-          handler: () => {
-            this.serverClient.deleteAppliance(appliance.id, this.dataService.selected_lang).subscribe(d => {
-              var callback = (): void => {
-                this.appliances.splice(this.appliances.indexOf(appliance), 1);
-              }
-              this.dataService.updateAppliancesTree(this.dataService.selected_lang, callback);
-
-            }, error => {
-              console.log(error);
-            });
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
 
 }
