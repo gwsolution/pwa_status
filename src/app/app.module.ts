@@ -24,7 +24,8 @@ import { CanActivateRouteGuard } from 'src/providers/util/canactivaterouteguard'
 import { LocationClient } from 'src/providers/server-util/location-client';
 import { CurrentPlatformService } from 'src/providers/util/current-platform-service';
 import { FirebaseAuthentication } from '@ionic-native/firebase-authentication/ngx';
-import { AngularFireDatabase, AngularFireDatabaseModule } from '@angular/fire/database';
+
+
 
 
 

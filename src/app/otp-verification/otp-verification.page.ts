@@ -8,7 +8,7 @@ import "@firebase/auth";
 
 
 declare var confirm: any;
-declare var isVerified:boolean;
+declare var isVerified: boolean;
 @Component({
   selector: 'app-otp-verification',
   templateUrl: './otp-verification.page.html',
@@ -17,90 +17,119 @@ declare var isVerified:boolean;
 export class OtpVerificationPage implements OnInit {
   @Input("phone") phone;
   verificationid;
-  windowReference:any;
+  windowReference: any;
   recaptchaVerifier
-prefix:any;
-line:any;
-verifCode:any;
+  prefix: any;
+  line: any;
+  verifCode: any;
 
 
 
-recaptchaWidgetId
-code;
-  constructor(public viewCtrl: ModalController, private zone: NgZone) { 
+  recaptchaWidgetId
+  code;
+  constructor(public viewCtrl: ModalController, private zone: NgZone) {
     this.viewCtrl
     confirm = null;
+  
   }
 
   ngOnInit() {
-  
+
     firebase.auth().languageCode = 'en';
     this.windowReference = this.windowRef;
+    timer(10)
   }
 
-  ionViewDidEnter(){
+  ionViewDidEnter() {
     // this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-    setTimeout(function() {
-     
-      
-    },1000);
+    setTimeout(function () {
+
+
+    }, 1000);
     this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
       'size': 'invisible',
-      'callback': function(response) {
-          console.log("success", response);
-          
+      'callback': function (response) {
+        console.log("success", response);
+
       },
-      'expired-callback': function() {
-          console.log("expired-callback");
+      'expired-callback': function () {
+        console.log("expired-callback");
       }
-  });
-  // console.log(this.doesPhoneNumberExist(this.phone));
-  this.send();
+    });
+    // console.log(this.doesPhoneNumberExist(this.phone));
+    this.send();
 
-  // this.recaptchaVerifier.render().then(function(widgetId) {
-  //       // this.windowReference.recaptchaWidgetId = widgetId;
-  //     });
+    // this.recaptchaVerifier.render().then(function(widgetId) {
+    //       // this.windowReference.recaptchaWidgetId = widgetId;
+    //     });
   }
-  
 
-  dismiss(){
-    
+
+  dismiss() {
+
     this.viewCtrl.dismiss(0);
   }
 
-  get windowRef(){
+  get windowRef() {
     return window;
-}
-
-send(){
-
-  firebase.auth().signInWithPhoneNumber('+91'+this.phone, this.recaptchaVerifier)
-  .then(function (confirmationResult) {
-
-
-    confirm = confirmationResult;
-    console.log(confirmationResult)
-  }).catch(function (error) {
-    console.log(error)
-  });
-}
-
-
-
-verifyCode(){
-  if(confirm){
-    confirm.confirm(this.verifCode).then((result) => {
-      // User signed in successfully.
-      const user = result.user;
-      this.viewCtrl.dismiss(1);
-      console.log(user)
-    }).catch((error) => {
-      this.viewCtrl.dismiss(0);
-    });
   }
- 
-}
+
+  send() {
+
+    firebase.auth().signInWithPhoneNumber('+91' + this.phone, this.recaptchaVerifier)
+      .then(function (confirmationResult) {
+
+
+        confirm = confirmationResult;
+        console.log(confirmationResult)
+      }).catch(function (error) {
+        console.log(error)
+      });
+  }
+
+
+
+  verifyCode() {
+    if (confirm) {
+      confirm.confirm(this.verifCode).then((result) => {
+        // User signed in successfully.
+        const user = result.user;
+        this.viewCtrl.dismiss(1);
+        console.log(user)
+      }).catch((error) => {
+        this.viewCtrl.dismiss(0);
+      });
+    }
+
+  }
 
 
 
 }
+
+let timerOn = true;
+function timer(remaining) {
+  let m: any = Math.floor(remaining / 60);
+  var s: any = remaining % 60;
+
+  m = m < 10 ? '0' + m : m;
+  s = s < 10 ? '0' + s : s;
+  document.getElementById('timer').innerHTML = m + ':' + s;
+  remaining -= 1;
+
+  if (remaining >= 0 && timerOn) {
+    setTimeout(function () {
+      timer(remaining);
+    }, 1000);
+    return;
+  }
+
+  if (!timerOn) {
+    // Do validate stuff here
+    return;
+  }
+
+  // Do timeout stuff here
+  alert('Timeout for otp');
+}
+

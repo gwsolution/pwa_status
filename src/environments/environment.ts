@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   BASE_URL:"https://api.planbell.com:8443/",
 //  BASE_URL:"https://localhost:8443/",
-  LOCATION_API:"https://apis.mapmyindia.com/advancedmaps/v1/dg2z7es76v4azkjie5j4fbgx4vwjgtds/rev_geocode?",
+  LOCATION_API:"https://apis.mapmyindia.com/advancedmaps/v1/dg2z7es76v4azkjie5j4fbgx4vwjgtds/rev_geocode",
   REVERSE_GEOCODING:"https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en&latitude=",
   PINCODE_API:"location/pincode/",
   USER_API:"user",
@@ -25,7 +25,7 @@ export const environment = {
   ADMIN_AUTHORIZATION:'Basic YWRtaW46YWRtaW4xMjM0NQ==',
   firebaseConfig : {
     apiKey: "AIzaSyD2MtKGQnTM-Ph49D78YlSKHVMqDBRUzUc",
-    authDomain: "gwsmodules-2020.firebaseapp.com",
+    authDomain: "trunear.firebaseapp.com",
     projectId: "gwsmodules-2020",
     storageBucket: "gwsmodules-2020.appspot.com",
     messagingSenderId: "536715246574",

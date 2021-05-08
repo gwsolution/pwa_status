@@ -12,17 +12,15 @@ export class LocationClient {
     }
 
     private getRequestOptions() {
-        return { 'Accept': 'application/json', 'content-type': 'application/json', 'Authorization': environment.AUTHORIZATION,'Access-Control-Allow-Origin': '*','allow-running-insecure-content':'true' }
+        return { 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT','Accept': 'application/json', 'content-type': 'application/json', 'Authorization': environment.AUTHORIZATION,'Access-Control-Allow-Origin': '*','allow-running-insecure-content':'true' }
       }
 
     public getLocation(lat, lng): Observable<Object> {
-        var headers = new HttpHeaders();
-        headers.append('Access-Control-Allow-Origin' , '*');
-        headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
-        headers.append('Accept','application/json');
-        headers.append('content-type','application/json');
-
-        return this.http.get(environment.LOCATION_API +  "lat="+lat+"&lng="+lng, { headers: headers });
+    
+        return this.http.get(environment.LOCATION_API ,   {
+            headers: this.getRequestOptions(),
+            params:{lat: lat, lng: lng}
+         });
     }
 
 

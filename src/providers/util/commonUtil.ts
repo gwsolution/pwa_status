@@ -15,4 +15,10 @@ export class commonUtil {
         let data_parsed = JSON.parse(data_array);
         return data_parsed.data;
     }
+
+    isNumber(value: string | number): boolean {
+        return ((value != null) &&
+            (value !== '') &&
+            !isNaN(Number(value.toString())));
+    }
 }

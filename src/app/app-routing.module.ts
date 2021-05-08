@@ -37,6 +37,10 @@ const routes: Routes = [
   {
     path: 'otp-verification',
     loadChildren: () => import('./otp-verification/otp-verification.module').then( m => m.OtpVerificationPageModule)
+  },
+  {
+    path: 'phone-login',
+    loadChildren: () => import('./phone-login/phone-login.module').then( m => m.PhoneLoginPageModule)
   }
 ];
 
