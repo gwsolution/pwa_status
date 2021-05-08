@@ -1,10 +1,47 @@
-<ion-content class="main-view">
-  <div class="overlay" (click)="dismiss()"></div>
-  <div class="modal_content" scrollY="true">
-    <ion-input [(ngModel)]="verifCode" type="tel">
-    </ion-input>
-    <ion-button (click)="verifyCode()">Verify Code</ion-button>
+<ion-content class="main-view"  class="ion-padding">
+  <div id="modal">
+    <p class="header_text" padding><solid>Phone number verification</solid></p>
+    <p  class="info_text" padding>Enter one time password sent to {{phone}}</p>
+    <ion-row class="ion-justify-content-center ion-padding">
+      <ion-col size="2">
+        <ion-input #otp1 id="otp1" [(ngModel)]="_otp1"   required maxLength="1" (keyup)="otpController($event,otp2,'')">
+        </ion-input>
+      </ion-col>
+      <ion-col size="2">
+        <ion-input #otp2 id="otp2" [(ngModel)]="_otp2"  required maxLength="1" (keyup)="otpController($event,otp3,otp1)">
+        </ion-input>
+      </ion-col>
+      <ion-col size="2">
+        <ion-input #otp3 id="otp3" [(ngModel)]="_otp3" required maxLength="1" (keyup)="otpController($event,otp4,otp2)">
+        </ion-input>
+      </ion-col>
+      <ion-col size="2">
+        <ion-input #otp4 id="otp4" [(ngModel)]="_otp4" required maxLength="1" (keyup)="otpController($event,otp5,otp3)">
+        </ion-input>
+      </ion-col>
+      <ion-col size="2">
+        <ion-input #otp5 id="otp5" [(ngModel)]="_otp5" required maxLength="1" (keyup)="otpController($event,otp6,otp4)">
+        </ion-input>
+      </ion-col>
+      <ion-col size="2">
+        <ion-input #otp6 id="otp6" [(ngModel)]="_otp6" required maxLength="1" (keyup)="otpController($event,'',otp5)">
+        </ion-input>
+      </ion-col>
+    </ion-row>
+
+
+    <ion-button [disabled]="true" id="verify" expand="block"  (click)="verifyCode()">Verify</ion-button>
+    <p *ngIf="isShowInfo" class="info_text" padding>{{info}}</p>
+    <p *ngIf="isError" class="error_text" padding>{{error}}</p>
   </div>
   <div id="recaptcha-container"></div>
-  <div>Time left = <span id="timer"></span></div>
+  <div *ngIf="!isResendCode" class="info_text">Resend OTP in <span id="timer"></span></div>
+  <ion-row class="ion-justify-content-end">
+    <ion-col  *ngIf="isResendCode"  size="7">
+      <p  class="info_text" padding>Didn't receive OTP ?</p>
+    </ion-col>
+    <ion-col size="5">
+    <ion-button  *ngIf="isResendCode" fill="outline" id="resendCode"  (click)="resendCode()">Resend OTP</ion-button>
+  </ion-col></ion-row>
+
 </ion-content>

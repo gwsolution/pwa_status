@@ -46,3 +46,17 @@
 //   div[scrolly=true] {
 //     overflow-y: auto;
 //   }
+#modal {
+    margin-top: 10%;
+}
+
+ion-input{
+    display:flex;
+
+    text-align:center;
+    border-radius: 20%;
+    border-color: black;
+    --background:whitesmoke;
+    --padding-end:7px;
+    }
+

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 
 
 
 @Injectable()
 export class commonUtil {
 
-    constructor() {
+    constructor( private toast: ToastController) {
     }
 
     getDataFromResponse(input) {
@@ -21,4 +22,12 @@ export class commonUtil {
             (value !== '') &&
             !isNaN(Number(value.toString())));
     }
+
+    async presentToast(text, duration) {
+        const toast = await this.toast.create({
+          message: text,
+          duration: duration
+        });
+        toast.present();
+      }
 }
