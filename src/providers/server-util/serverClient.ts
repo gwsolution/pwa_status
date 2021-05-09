@@ -50,5 +50,9 @@ export class serverClient {
         return this.http.post(environment.BASE_URL + environment.USER_API, user, { headers: this.getUserRequestOptions(user.uuid, token) });
     }
 
+    public getUser(uuid, token): Observable<Object> {
+        return this.http.get(environment.BASE_URL + environment.USER_API, { headers: this.getUserRequestOptions(uuid, token) });
+    }
+
 
 }

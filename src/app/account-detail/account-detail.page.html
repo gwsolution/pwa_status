@@ -58,48 +58,77 @@
 
 
 
-          <ion-item *ngFor="let contact of contacts;let i = index trackBy:trackByFn" class="label_margin"
+          <!-- <ion-item *ngFor="let contact of contacts;let i = index trackBy:trackByFn" class="label_margin"
             id="contact_parent">
             <ion-label position="stacked">Contact Number</ion-label>
             <ion-input type="number" clearInput placeholder="Please enter your phone number here" id="contacts{{i}}"
               [(ngModel)]="contacts[i]">
             </ion-input>
-          </ion-item>
+          </ion-item> -->
 
 
-          <div *ngFor="let item of items ; let i = index trackBy:trackByFn">
+          <div *ngFor="let item of contacts ; let i = index trackBy:trackByFn" class="label_margin">
             <ion-row>
               <ion-col size="10">
                 <ion-item>
                   <!-- <ion-input type="number" clearInput placeholder="Please enter your phone number here" id="option{{i}}"
                     [(ngModel)]="items[i]">
                   </ion-input> -->
-                  <ion-label type="number"  id="option{{i}}">{{items[i]}}</ion-label>
+                  <ion-label type="number" id="option{{i}}">{{item.contact}}</ion-label>
                 </ion-item>
               </ion-col>
 
-              <ion-col size="2" class="ion-align-self-end">
+              <ion-col *ngIf="item.isEditable" size="2" class="ion-align-self-end">
                 <ion-button color="light" size="small" icon-only (click)="deleteOption(item)">
                   <ion-icon slot="icon-only" name="close"></ion-icon>
                 </ion-button>
               </ion-col>
             </ion-row>
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label>Call ?</ion-label>
+                  <ion-checkbox [disabled]="!item.isEditable" slot="end" [(ngModel)]="item.isCall"></ion-checkbox>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label>Whatsapp ?</ion-label>
+                  <ion-checkbox slot="end" [(ngModel)]="item.isWhatsapp"></ion-checkbox>
+                </ion-item>
+              </ion-col>
+            </ion-row>
           </div>
 
-          <ion-item class="rounded" id="option">
-            <ion-label position="stacked">Contact Number</ion-label>
-            <ion-textarea rows="1" maxlength="50" id="messageInputBox" placeholder="Please enter your phone number here"
-              [(ngModel)]="option" (keyup.enter)="add_contact()" required></ion-textarea>
-          </ion-item>
-          <ion-row class="ion-align-self-end">
-            <ion-col size="12">
-          <ion-item>
-            <ion-button expand="full" slot="end" color="light" (click)="add_contact()">Add Contact
-              <ion-icon  name="add-outline"></ion-icon>
-            </ion-button>
-          </ion-item>
-          </ion-col></ion-row>
+          <div class="label_margin">
 
+            <ion-row>
+              <ion-col size-md="4">
+                <ion-row  id="option"  class="ion-justify-content-center">
+                  <ion-col size='3'>
+                    <ion-input [(ngModel)]="code" placeholder="+91" [disabled]="true" type="tel" maxlength='4'>
+                    </ion-input>
+                  </ion-col>
+                  <ion-col size='9'>
+                    <ion-textarea rows="1" maxlength="10" id="messageInputBox" placeholder="phone number"
+                      [(ngModel)]="option" required></ion-textarea>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+
+
+
+            <ion-row class="ion-align-self-end">
+              <ion-col size="12">
+                <ion-item>
+                  <ion-button expand="full" slot="end" color="light" (click)="add_contact()">Add Contact
+                    <ion-icon name="add-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </div>
 
           <ion-row class="ion-align-self-end">
             <ion-col size="12">

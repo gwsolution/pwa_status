@@ -2,6 +2,8 @@ import { Component,  OnInit } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 import { UserService } from 'src/app/user.service';
+import { commonUtil } from 'src/providers/util/commonUtil';
+import { StorageService } from 'src/providers/util/storage.service';
 
 
 @Component({
@@ -10,11 +12,21 @@ import { UserService } from 'src/app/user.service';
   styleUrls: ['./explore.page.scss'],
 })
 export class ExplorePage implements OnInit {
-
-  constructor( private authService: UserService) { }
+  user
+  constructor(  private userService: UserService, private util: commonUtil, private storage: StorageService) { }
 
   ngOnInit() {
-  
+    this.storage.get('user').then(data => {
+      this.user = data;
+      console.log(this.user)
+      if (this.user)
+        this.fetchUserDetail();
+      else {
+        this.user = this.userService.getUser()
+        this.fetchUserDetail();
+      }
+    })
+
 
     // this.geolocation.getCurrentPosition().then((resp) => {
     //   // resp.coords.latitude
@@ -40,10 +52,18 @@ export class ExplorePage implements OnInit {
     // });
   }
 
+  fetchUserDetail() {
+    this.userService.getUserDetail(this.user).subscribe(async d => {
+      var data = this.util.getDataFromResponse(d);
+      console.log(data);
+      this.storage.set("user-detail", data);
+    }, error => {
+      console.log(error);
+    });
+  }
+
   signout(){
-   var user = this.authService.getUser()
-    console.log(user)
-    this.authService.signout()
+    this.userService.signout()
   }
 
 

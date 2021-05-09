@@ -110,20 +110,22 @@ export class OtpVerificationPage implements OnInit {
       (await loading).present();
       firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
       .then(async () => {
-      confirm.confirm(this.code).then((result) => {
+      confirm.confirm(this.code).then(async (result) => {
         const user = result.user;
-        const additionalUserInfo = result.additionalUserInfo
 
         if (this.isLoginFlow) {
           this.storageService.set('user', user.toJSON())
-          // this.storageService.set('token', user.toJSON().stsTokenManager.accessToken)
           this.userService.loginFlow(user.toJSON(), this.viewCtrl, loading);
 
           firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-          
-        } else
+          console.log(user.toJSON())
+        } else{
+          (await loading).dismiss();
           this.viewCtrl.dismiss(1);
-        console.log(user.toJSON())
+
+        }
+         
+       
       }).catch((error) => {
         if (this.isLoginFlow) {
           console.log(error)

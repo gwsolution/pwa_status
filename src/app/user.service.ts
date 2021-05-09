@@ -18,13 +18,13 @@ export class UserService {
   public isLogged: any = false;
   public user: any;
 
-  constructor(private util:commonUtil, public fAuth: AngularFireAuth, private storage: StorageService, private router: Router, private serverClient: serverClient) {
+  constructor(private af: AngularFireAuth,private util:commonUtil, public fAuth: AngularFireAuth, private storage: StorageService, private router: Router, private serverClient: serverClient) {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log(user)
+
       if (user) {
         this.isLogged = true
         this.user = user
-        console.log(this.router.url)
+
         if (this.router.url == '/phone-login') {
           this.router.navigate(["main/explore"]);
         }
@@ -34,6 +34,14 @@ export class UserService {
         this.router.navigate(["phone-login"]);
       }
     });
+
+    this.af.authState.subscribe(auth => {
+      if (auth) {
+        this.user = auth;
+        this.isLogged = true
+
+      }
+    })
 
   }
 
@@ -74,14 +82,23 @@ export class UserService {
   
     this.serverClient.createUser(u, user.stsTokenManager.accessToken).subscribe(async d =>  {
       var data = this.util.getDataFromResponse(d);
-      console.log(data);
+      console.log(data.user);
      (await loading).dismiss();
+     this.storage.set("user-detail",data)
       this.router.navigate(["main/explore"]);
       
       viewCtrl.dismiss(1);
     }, error => {
       console.log(error);
     });
+  
+
+
+
+  }
+
+   getUserDetail(user) {
+  return this.serverClient.getUser(user.uid, user.stsTokenManager.accessToken)
   
 
 

@@ -16,9 +16,9 @@ export class StorageService {
     const storage = await this.storage.create();
     this._storage = storage;
 
-    this.storage.get('user').then(user=>{
-        console.log(user)
-      })
+    // this._storage.get('user').then(user=>{
+    //     console.log(user)
+    //   })
 
   }
 
@@ -27,7 +27,7 @@ export class StorageService {
   }
 
   public async get(key: string){
-    await this._storage?.get(key);
+    return await this._storage?.get(key);
   }
 
   public async remove(key: string){

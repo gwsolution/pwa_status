@@ -5,6 +5,7 @@ import firebase from "@firebase/app";
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { environment } from 'src/environments/environment';
 import { StorageService } from 'src/providers/util/storage.service';
+import { UserService } from './user.service';
 
 @Component({
   selector: 'app-root',
@@ -18,18 +19,19 @@ export class AppComponent {
   ) {
     firebase.initializeApp(environment.firebaseConfig);
     this.initializeApp();
+    
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-   
       // this.splashScreen.hide();
     });
   }
 
   async ngOnInit() {
     await this.storage.init();
+    
    
   }
 }
