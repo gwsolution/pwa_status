@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from 'src/providers/util/authguard';
 import { CanActivateRouteGuard } from 'src/providers/util/canactivaterouteguard';
 
 const routes: Routes = [
@@ -40,7 +41,8 @@ const routes: Routes = [
   },
   {
     path: 'phone-login',
-    loadChildren: () => import('./phone-login/phone-login.module').then( m => m.PhoneLoginPageModule)
+    loadChildren: () => import('./phone-login/phone-login.module').then( m => m.PhoneLoginPageModule),
+    canActivate: [AuthGuard]
   }
 ];
 

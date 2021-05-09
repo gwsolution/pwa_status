@@ -1,9 +1,92 @@
 import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { Storage } from '@ionic/storage-angular';
+import firebase from "@firebase/app";
+import "@firebase/auth";
+import { StorageService } from 'src/providers/util/storage.service';
+import { Router } from '@angular/router';
+import { serverClient } from 'src/providers/server-util/serverClient';
+import { User } from 'src/providers/pojo/user';
+import { commonUtil } from 'src/providers/util/commonUtil';
+import { LoadingController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor() { }
+  public isLogged: any = false;
+  public user: any;
+
+  constructor(private util:commonUtil, public fAuth: AngularFireAuth, private storage: StorageService, private router: Router, private serverClient: serverClient) {
+    firebase.auth().onAuthStateChanged((user) => {
+      console.log(user)
+      if (user) {
+        this.isLogged = true
+        this.user = user
+        console.log(this.router.url)
+        if (this.router.url == '/phone-login') {
+          this.router.navigate(["main/explore"]);
+        }
+      } else {
+        this.isLogged = false
+        this.storage.remove('user')
+        this.router.navigate(["phone-login"]);
+      }
+    });
+
+  }
+
+  getUser() {
+    return this.user;
+
+    // return firebase.auth().cur ̰rentUser.getIdToken(true)
+    // .then(function(idToken) {
+    // return idToken
+    // }).catch(function(error) {
+
+    // });
+  }
+
+
+  reload() {
+    firebase.auth().currentUser.reload();
+  }
+
+  async signout() {
+
+    firebase.auth().signOut().then(() => {
+      this.storage.remove('user')
+      this.user = null;
+      this.isLogged = false;
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
+
+  async loginFlow(user, viewCtrl, loading) {
+    let u: User = {
+      phone: user.phoneNumber,
+      uuid: user.uid,
+      status: 0,
+      isEnabled: false
+    }  
+  
+    this.serverClient.createUser(u, user.stsTokenManager.accessToken).subscribe(async d =>  {
+      var data = this.util.getDataFromResponse(d);
+      console.log(data);
+     (await loading).dismiss();
+      this.router.navigate(["main/explore"]);
+      
+      viewCtrl.dismiss(1);
+    }, error => {
+      console.log(error);
+    });
+  
+
+
+
+  }
+
+
 }

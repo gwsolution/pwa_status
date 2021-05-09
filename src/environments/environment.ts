@@ -9,7 +9,7 @@ export const environment = {
   LOCATION_API:"https://apis.mapmyindia.com/advancedmaps/v1/dg2z7es76v4azkjie5j4fbgx4vwjgtds/rev_geocode",
   REVERSE_GEOCODING:"https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en&latitude=",
   PINCODE_API:"location/pincode/",
-  USER_API:"user",
+  USER_API:"tn-user",
   APPLIANCE_API:"appliance",
   CATEGORY_API:"ad-category",
   USER_MODERATION_API:"moderation",

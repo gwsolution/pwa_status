@@ -1,6 +1,15 @@
 <ion-content class="main-view"  class="ion-padding">
+  <ion-row >
+    <ion-col offset="10" size="2">
+      <ion-button color="light" size="small" icon-only (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
   <div id="modal">
-    <p class="header_text" padding><solid>Phone number verification</solid></p>
+   
+    <p class="header_text" padding>Phone number verification</p>
     <p  class="info_text" padding>Enter one time password sent to {{phone}}</p>
     <ion-row class="ion-justify-content-center ion-padding">
       <ion-col size="2">
@@ -35,13 +44,13 @@
     <p *ngIf="isError" class="error_text" padding>{{error}}</p>
   </div>
   <div id="recaptcha-container"></div>
-  <div *ngIf="!isResendCode" class="info_text">Resend OTP in <span id="timer"></span></div>
+  <div *ngIf="isCodeSent&&!isResendCode" class="info_text">Resend OTP in <span id="timer"></span></div>
   <ion-row class="ion-justify-content-end">
     <ion-col  *ngIf="isResendCode"  size="7">
       <p  class="info_text" padding>Didn't receive OTP ?</p>
     </ion-col>
     <ion-col size="5">
-    <ion-button  *ngIf="isResendCode" fill="outline" id="resendCode"  (click)="resendCode()">Resend OTP</ion-button>
+    <ion-button  *ngIf="isResendCode" fill="outline" id="resendCode"  (click)="send()">Resend OTP</ion-button>
   </ion-col></ion-row>
 
 </ion-content>

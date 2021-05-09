@@ -4,6 +4,8 @@ import { Platform } from '@ionic/angular';
 import firebase from "@firebase/app";
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { environment } from 'src/environments/environment';
+import { StorageService } from 'src/providers/util/storage.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -12,7 +14,7 @@ import { environment } from 'src/environments/environment';
 export class AppComponent {
   navigate : any;
   constructor(
-    private platform: Platform, private statusBar: StatusBar
+    private platform: Platform, private statusBar: StatusBar, private storage:StorageService
   ) {
     firebase.initializeApp(environment.firebaseConfig);
     this.initializeApp();
@@ -24,5 +26,10 @@ export class AppComponent {
    
       // this.splashScreen.hide();
     });
+  }
+
+  async ngOnInit() {
+    await this.storage.init();
+   
   }
 }

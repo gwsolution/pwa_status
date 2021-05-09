@@ -19,6 +19,8 @@ export class PhoneLoginPage implements OnInit {
   constructor(private util:commonUtil, public modalController: ModalController) { }
 
   ngOnInit() {
+    this.phone='9891494896'
+    this. goToOtpVerificationPage()
   }
 
   sendLoginCode(){

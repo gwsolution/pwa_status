@@ -24,7 +24,10 @@ import { CanActivateRouteGuard } from 'src/providers/util/canactivaterouteguard'
 import { LocationClient } from 'src/providers/server-util/location-client';
 import { CurrentPlatformService } from 'src/providers/util/current-platform-service';
 import { FirebaseAuthentication } from '@ionic-native/firebase-authentication/ngx';
-
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { UserService } from './user.service';
+import { IonicStorageModule } from '@ionic/storage-angular';
+import { StorageService } from 'src/providers/util/storage.service';
 
 
 
@@ -34,7 +37,9 @@ import { FirebaseAuthentication } from '@ionic-native/firebase-authentication/ng
   entryComponents: [],
   imports: [HttpClientModule, BrowserModule, IonicModule.forRoot(), AppRoutingModule, AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
-  
+    AngularFireAuthModule,
+
+    IonicStorageModule.forRoot(),
     AngularFireStorageModule],
   providers: [
     StatusBar,
@@ -46,7 +51,8 @@ import { FirebaseAuthentication } from '@ionic-native/firebase-authentication/ng
     Geolocation,
     CanActivateRouteGuard,
     NativeGeocoder,
-
+    UserService,
+    StorageService,
     FirebaseAuthentication,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

@@ -15,7 +15,7 @@ export class serverClient {
       }
 
     private getUserRequestOptions(uuid, token) {
-        return { 'Accept': 'application/json', 'content-type': 'application/json', 'Authorization': environment.AUTHORIZATION, 'uuid': uuid, 'token': token }
+        return { 'Accept': 'application/json', 'content-type': 'application/json', 'Authorization': environment.AUTHORIZATION, 'uuid': uuid, 'token': token,'Access-Control-Allow-Origin': '*','allow-running-insecure-content':'true' }
     }
 
     private getAdminRequestOptions() {
@@ -45,5 +45,10 @@ export class serverClient {
     public createToken(id): Observable<Object> {
         return this.http.get(environment.BASE_URL + environment.REFRESH_TOKEN_API  + id, { headers: this.getAdminRequestOptions() });
     }
+
+    public createUser(user, token): Observable<Object> {
+        return this.http.post(environment.BASE_URL + environment.USER_API, user, { headers: this.getUserRequestOptions(user.uuid, token) });
+    }
+
 
 }
